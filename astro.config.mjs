@@ -9,6 +9,7 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'ANTBot Wiki',
+			favicon: '/favicon.png',
 			defaultLocale: 'root',
 			locales: {
 				root: { label: '한국어', lang: 'ko' },
