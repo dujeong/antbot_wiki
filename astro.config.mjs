@@ -12,19 +12,14 @@ export default defineConfig({
 			defaultLocale: 'root',
 			locales: {
 				root: { label: '한국어', lang: 'ko' },
+				en: { label: 'English', lang: 'en' },
 			},
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/ROBOTIS-move/antbot' }],
 			sidebar: [
 				{
-					label: '하드웨어 납품 가이드',
-					items: [
-						{ label: '제품 개요', slug: 'hardware/introduction' },
-						{ label: '소프트웨어 패키지 구성', slug: 'hardware/software-packages' },
-						{ label: 'Control Table', slug: 'hardware/control-table' },
-						{ label: '시작하기 (Quick Start)', slug: 'hardware/quick-start' },
-						{ label: '유지보수 및 트러블슈팅', slug: 'hardware/maintenance' },
-						{ label: '라이선스 및 기술 지원', slug: 'hardware/license' },
-					],
+					label: 'Hardware Delivery Guide',
+					translations: { ko: '하드웨어 납품 가이드' },
+					autogenerate: { directory: 'hardware' },
 				},
 			],
 		}),
