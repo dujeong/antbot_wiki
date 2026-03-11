@@ -1,14 +1,14 @@
 ---
 title: ANTBot Wiki
-description: ANTBot 5th Generation Hardware Delivery Guide
+description: ANTBot Outdoor Autonomous Delivery Robot Wiki
 template: splash
 hero:
-  tagline: ROBOTIS AI ANTBot 5th Gen Autonomous Delivery Robot Hardware Documentation
+  tagline: ROBOTIS AI ANTBot Outdoor Autonomous Delivery Robot Documentation
   image:
     file: ../../../assets/images/image1.png
   actions:
     - text: Get Started
-      link: /antbot_wiki/en/hardware/introduction/
+      link: /antbot_wiki/en/introduction/
       icon: right-arrow
       variant: primary
     - text: GitHub Repository
@@ -20,8 +20,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## Notice
 
-This document is a guide provided with the hardware delivery of the ANTBot autonomous delivery robot.
-It includes software configuration, hardware specifications, and maintenance guidelines.
+This is the wiki page for operating and developing the ANTBot outdoor autonomous delivery robot.
 
 ---
 
@@ -29,21 +28,27 @@ It includes software configuration, hardware specifications, and maintenance gui
 
 | Date | Version | Author | Description |
 | :--- | :--- | :--- | :--- |
-| 2026-02-18 | V1.0 | Daun Jeong | Initial hardware delivery guide |
+| 2026-02-18 | V1.0 | Daun Jeong | Initial wiki draft |
 
 ---
 
 <CardGrid>
-  <Card title="Product Overview" icon="information">
-    Check basic product information including structure, hardware specs, and sensor coordinates.
+  <Card title="Introduction" icon="information">
+    Product introduction and shipment contents
   </Card>
-  <Card title="Software Packages" icon="puzzle">
-    ROS 2 drivers, in-house packages, and third-party package configuration guide.
+  <Card title="Hardware" icon="setting">
+    Exterior, HMI panel, specifications, sensor coordinates, on-board computer
   </Card>
-  <Card title="Control Table" icon="setting">
-    Hardware control table item list for RCU, IMU, and more.
+  <Card title="Software" icon="puzzle">
+    ROS 2 drivers, in-house packages, third-party packages, environment setup
   </Card>
   <Card title="Quick Start" icon="rocket">
-    Hardware preparation and software environment setup guide.
+    Unboxing, power, network, charging, controller, SSD setup
+  </Card>
+  <Card title="Development Guide" icon="document">
+    Control table, ROS topics/services, simulation
+  </Card>
+  <Card title="Maintenance" icon="warning">
+    Firmware diagnostics, updates, error codes, troubleshooting
   </Card>
 </CardGrid>

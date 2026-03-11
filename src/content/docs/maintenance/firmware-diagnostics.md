@@ -1,11 +1,9 @@
 ---
-title: 유지보수 및 트러블슈팅
-description: ANTBot 펌웨어 진단 및 유지보수 방법
+title: 6.1 펌웨어 진단
+description: RCU 보드 펌웨어 진단
 sidebar:
-  order: 5
+  order: 1
 ---
-
-## 5.1 펌웨어 진단
 
 RCU 보드 진단이 필요한 경우, 제공된 **Dynamixel Wizard 2.0**을 활용하여 다음 순서로 진행합니다.
 

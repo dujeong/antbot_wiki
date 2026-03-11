@@ -1,11 +1,35 @@
 ---
-title: 하드웨어 Control Table
-description: RCU 및 IMU 컨트롤 테이블 아이템 목록
+title: 5.1 컨트롤 테이블
+description: ANTBot 컨트롤 테이블 아이템 목록
 sidebar:
-  order: 3
+  order: 1
 ---
 
-GAEMI-1 G50 로봇에서 사용하는 컨트롤 테이블 아이템 목록입니다.
+컨트롤 테이블은 장치의 현재 상태와 구동 및 제어에 필요한 다수의 데이터로 이루어져 있습니다.
+
+사용자는 [다이나믹셀 프로토콜 2.0](https://emanual.robotis.com/docs/kr/dxl/protocol2/)을 사용해 컨트롤 테이블의 특정 데이터를 읽어서 장치의 상태를 파악할 수 있고, 데이터를 변경함으로써 장치를 제어할 수 있습니다.
+
+## 컨트롤 아이템 기본정보
+
+- 크기
+
+  데이터의 크기는 용도에 따라 1 ~ 4 byte로 정해져 있으며, 컨트롤 테이블을 통해 해당 데이터의 크기를 확인하시기 바랍니다.
+
+  2 byte 이상의 연속된 데이터는 Little Endian 규칙에 의해 기록됩니다.
+
+- 접근권한
+
+  컨트롤 테이블의 데이터는 2가지 접근 속성을 갖습니다. 'RW'는 읽기와 쓰기 접근이 모두 가능합니다. 반면 'R'은 읽기 전용(Read Only) 속성을 갖습니다.
+
+  읽기 전용 속성의 데이터는 해당 주소로 값을 쓰더라도 값이 변경되지 않습니다.
+
+- 기본값
+
+  컨트롤 테이블에 표기된 기본값은 장치에 전원이 인가되었을 때 설정되는 값입니다.
+
+  전원이 꺼지면 값이 보존되지 않습니다.
+
+## ANTBot 컨트롤 테이블
 
 - **통신 프로토콜**: Dynamixel Protocol 2.0
 - **모델 번호**: 526
@@ -15,11 +39,11 @@ GAEMI-1 G50 로봇에서 사용하는 컨트롤 테이블 아이템 목록입니
 
 ---
 
-## 3.1 RCU (Robot Control Unit)
+### RCU (Robot Control Unit)
 
-### 3.1.1 System
+#### 시스템
 
-| Name | Unit | R/W | Description |
+| 이름 | 단위 | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Robot_Generation | - | R | 로봇 세대 |
 | RTC_Set_Date | YYMMDD | RW | 호스트 시간 동기화를 위한 날짜 설정 (예: 260225 → 2026년 2월 25일) |
@@ -28,9 +52,9 @@ GAEMI-1 G50 로봇에서 사용하는 컨트롤 테이블 아이템 목록입니
 | Sec_Since_Reset | sec | R | 마지막 리셋 후 경과 시간 |
 | Remote_Connected | - | R | 리모컨 연결 상태 |
 
-### 3.1.2 Motor
+#### 모터
 
-| Name | Unit (Scale) | R/W | Description |
+| 이름 | 단위 (Scale) | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Motor_State | - | R | 모터 상태 (IDLE, READY_ENTER, READY, FAULT_ENTER, FAULT, FAULT_EXIT, NOT_CONNECT, BRAKE) |
 | Motor_Reboot_Check | - | RW | 모터 리부팅 확인 |
@@ -46,9 +70,9 @@ GAEMI-1 G50 로봇에서 사용하는 컨트롤 테이블 아이템 목록입니
 | S1~S4_Profile_Velocity | rev/min (×0.229) | RW | 스티어링 속도 프로파일 |
 | S1~S4_Present_Current | mA | R | 스티어링 모터 전류 |
 
-### 3.1.3 Battery
+#### 배터리
 
-| Name | Unit (Scale) | R/W | Description |
+| 이름 | 단위 (Scale) | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Battery_Current | mA (×10) | R | 배터리 전류 |
 | Battery_Voltage | V (×0.01) | R | 배터리 전압 |
@@ -57,15 +81,15 @@ GAEMI-1 G50 로봇에서 사용하는 컨트롤 테이블 아이템 목록입니
 | BMS_Temperature | °C | R | BMS 온도 |
 | Battery_Is_Charging | - | R | 충전 상태 (Discharging, Charging) |
 
-### 3.1.4 Emergency State
+#### 비상정지
 
-| Name | Unit | R/W | Description |
+| 이름 | 단위 | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Estop_State | - | R | 비상정지 상태 (OFF, ON) |
 
-### 3.1.5 Docking & Charging
+#### 도킹 및 충전
 
-| Name | Unit | R/W | Description |
+| 이름 | 단위 | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Docking | - | R | 도킹 상태 (No, Yes) |
 | Charging_Station_ID | - | R | 충전 스테이션 ID |
@@ -76,17 +100,17 @@ GAEMI-1 G50 로봇에서 사용하는 컨트롤 테이블 아이템 목록입니
 | Charge_Error | - | R | 충전 에러 코드 |
 | Charge_Command | - | RW | 충전 명령 (None, Grip, Release, Force Charge Enable/Disable/Clear) |
 
-### 3.1.6 Cargo (적재함)
+#### 적재함
 
-| Name | Unit | R/W | Description |
+| 이름 | 단위 | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Cargo_Command | - | RW | 적재함 명령 (None, Stop, Lock, Unlock, Open, Close) |
 | Cargo_Door_State | - | R | 도어 상태 (Closed, Opened) |
 | Cargo_Lock_State | - | R | 잠금 상태 (Neutral, Locked, Unlocked, No_Response) |
 
-### 3.1.7 LED
+#### LED
 
-| Name | Unit (Scale) | R/W | Description |
+| 이름 | 단위 (Scale) | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Led_Flag_Mode | - | RW | 플래그 LED 모드 (OFF, LIVE, RGB, BLINK_100MS/500MS/1000MS, EYE_SOC/IDLING/SLEEPY/ANGRY/BLINK/OPEN/WOW) |
 | Led_Flag_Brightness | % (×0.392) | RW | 플래그 LED 밝기 |
@@ -100,54 +124,54 @@ GAEMI-1 G50 로봇에서 사용하는 컨트롤 테이블 아이템 목록입니
 | Led_Turn_Signal | - | RW | 방향지시등 (Off, Left, Right) |
 | Led_Turn_Signal_Red/Green/Blue | % (×0.392) | RW | 방향지시등 RGB |
 
-### 3.1.8 Headlight
+#### 전조등
 
-| Name | Unit | R/W | Description |
+| 이름 | 단위 | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Headlight_State | - | RW | 전조등 (OFF, ON) |
 
-### 3.1.9 Wiper
+#### 와이퍼
 
-| Name | Unit (Scale) | R/W | Description |
+| 이름 | 단위 (Scale) | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Wiper_Mode | - | RW | 와이퍼 모드 (Off, Once, INT) |
 | Wiper_INT_Time | sec (×0.1) | RW | 간헐 와이퍼 주기 |
 | Wiper_Hw_error_1~3 | - | R | 와이퍼 1~3 에러 코드 |
 
-### 3.1.10 Relay
+#### 릴레이
 
-| Name | Unit (Scale) | R/W | Description |
+| 이름 | 단위 (Scale) | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Relay_Control | bitmask | RW | 릴레이 제어 (8채널, 비트 인코딩) |
 | Relay_Timeout | sec (×0.1) | RW | 릴레이 자동 타임아웃 |
 
-### 3.1.11 Barometer
+#### 기압계
 
-| Name | Unit (Scale) | R/W | Description |
+| 이름 | 단위 (Scale) | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Pressure_Sensor_Connection | - | R | 기압 센서 연결 상태 (Disconnected, Connected) |
 | ATM_Pressure | hPa (×0.01) | R | 대기압 |
 
-### 3.1.12 Magnetometer
+#### 지자기 센서
 
-| Name | Unit (Scale) | R/W | Description |
+| 이름 | 단위 (Scale) | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | Magnet_Sensor_Connection | - | R | 지자기 센서 연결 상태 (Disconnected, Connected) |
 | Magnet_Out_X/Y/Z | mG (×1.5) | R | 3축 자기장 |
 
-### 3.1.13 Ultrasonic
+#### 초음파 센서
 
-| Name | Unit | R/W | Description |
+| 이름 | 단위 | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | UltraSonic_1~2 | cm | R | 초음파 거리 센서 |
 
 ---
 
-## 3.2 IMU
+### IMU
 
 별도 통신 채널을 통해 RCU 보드의 IMU 데이터를 읽습니다. 모든 아이템은 읽기 전용입니다.
 
-| Name | Unit (Scale) | R/W | Description |
+| 이름 | 단위 (Scale) | 접근 | 설명 |
 | :--- | :--- | :--- | :--- |
 | IMU_Acc_X/Y/Z | g (×0.0000610) | R | 3축 가속도 |
 | IMU_Gyro_X/Y/Z | dps (×16.4) | R | 3축 각속도 |

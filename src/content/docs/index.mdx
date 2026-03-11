@@ -1,14 +1,14 @@
 ---
 title: ANTBot Wiki
-description: 일개미 5세대 (ANTBot) 하드웨어 납품 가이드
+description: ANTBot 실외 자율주행 배송 로봇 위키
 template: splash
 hero:
-  tagline: ROBOTIS AI 일개미 5세대 자율주행 배송 로봇 하드웨어 문서
+  tagline: ROBOTIS AI ANTBot 실외 자율주행 배송 로봇 문서
   image:
     file: ../../assets/images/image1.png
   actions:
     - text: 가이드 시작하기
-      link: /antbot_wiki/hardware/introduction/
+      link: /antbot_wiki/introduction/
       icon: right-arrow
       variant: primary
     - text: GitHub Repository
@@ -20,8 +20,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 ## 안내 사항
 
-본 문서는 ANTBot 자율주행 배송 로봇의 하드웨어 납품 시 제공되는 가이드입니다.
-소프트웨어 구성과 하드웨어 제원 및 유지보수 방안을 포함하고 있습니다.
+본 문서는 ANTBot 실외 자율주행 배송 로봇의 운용 및 개발을 위한 위키 페이지입니다.
 
 ---
 
@@ -29,21 +28,27 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 | 업데이트 날짜 | 문서 버전 | 작성자 | 내용 |
 | :--- | :--- | :--- | :--- |
-| 2026-02-18 | V1.0 | 정다운 | 하드웨어 납품 가이드 초안 작성 |
+| 2026-02-18 | V1.0 | 정다운 | 위키 초안 작성 |
 
 ---
 
 <CardGrid>
-  <Card title="제품 개요" icon="information">
-    ANTBot의 구조도, 하드웨어 제원, 센서 좌표 등 제품 기본 정보를 확인합니다.
+  <Card title="소개" icon="information">
+    ANTBot 제품 소개 및 구성품 안내
   </Card>
-  <Card title="소프트웨어 패키지" icon="puzzle">
-    ROS 2 드라이버, 자체 개발 패키지, 외부 의존 패키지 구성을 안내합니다.
+  <Card title="하드웨어" icon="setting">
+    외관, HMI 패널, 제품 사양, 센서 좌표, 온보드 컴퓨터 정보
   </Card>
-  <Card title="Control Table" icon="setting">
-    RCU, IMU 등 하드웨어 컨트롤 테이블 아이템 목록을 제공합니다.
+  <Card title="소프트웨어" icon="puzzle">
+    ROS 2 드라이버, 자체 개발 패키지, 외부 의존 패키지, 환경 구축
   </Card>
-  <Card title="시작하기" icon="rocket">
-    하드웨어 준비 및 소프트웨어 환경 구축 방법을 안내합니다.
+  <Card title="빠른 시작" icon="rocket">
+    개봉, 전원, 네트워크, 충전, 컨트롤러, SSD 설정
+  </Card>
+  <Card title="개발 가이드" icon="document">
+    컨트롤 테이블, ROS 토픽/서비스, 시뮬레이션
+  </Card>
+  <Card title="유지보수" icon="warning">
+    펌웨어 진단, 업데이트, 에러코드, 트러블슈팅
   </Card>
 </CardGrid>
