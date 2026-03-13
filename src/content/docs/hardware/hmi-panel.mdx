@@ -1,0 +1,35 @@
+---
+title: 2.2 HMI 패널
+description: ANTBot HMI (Human-Machine Interface) 패널
+sidebar:
+  order: 2
+---
+
+import { Badge, Card, CardGrid } from '@astrojs/starlight/components';
+
+ANTBot 좌측에 HMI 패널이 있습니다.
+
+![HMI Panel](../../../assets/images/hmi-panel.svg)
+
+---
+
+## 포트 구성
+
+<CardGrid>
+  <Card title="HDMI 포트" icon="laptop">
+    외부 디스플레이 연결<br/>
+    시스템 상태 · GUI 직접 확인
+  </Card>
+  <Card title="USB 포트 ×2" icon="puzzle">
+    범용 주변기기 연결<br/>
+    유지보수 · 초기 설정용
+  </Card>
+  <Card title="수동 충전 단자" icon="star">
+    DC 어댑터 보조 충전<br/>
+    도킹 스테이션 미설치 시 사용
+  </Card>
+</CardGrid>
+
+:::tip
+일반 운행 시에는 HMI 패널을 사용할 필요가 없습니다. 디버깅이나 초기 설정 시 활용합니다.
+:::

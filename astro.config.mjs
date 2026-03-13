@@ -16,6 +16,7 @@ export default defineConfig({
 				en: { label: 'English', lang: 'en' },
 			},
 			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/ROBOTIS-move/antbot' }],
+			customCss: ['./src/styles/custom.css'],
 			sidebar: [
 				{
 					label: 'Introduction',

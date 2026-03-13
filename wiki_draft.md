@@ -144,7 +144,7 @@ ROBOTIS AI에서 개발한 ANTBot 전용 핵심 패키지 리스트입니다.
 
 제공된 소스코드를 빌드하기 위해 아래 스크립트를 터미널에서 실행합니다.
 
-```bash
+```
 # ANTBot 한 줄 설치 스크립트 실행
 curl -sSL <https://github.com/ROBOTIS-move/antbot/install/main/setting.sh> | bash
 ```
@@ -173,7 +173,7 @@ ANTBot 컴퓨터는 네트워크 구성 도구로 `netplan` 을 사용합니다.
 
 2. 랩탑을 동일한 네트워크로 접속시킨 후, 아래 명령어를 통해 ssh 접속
 
-   ```bash
+   ```
    ssh antbot@192.168.6.2
    ```
 
@@ -198,13 +198,13 @@ ANTBot 컴퓨터는 네트워크 구성 도구로 `netplan` 을 사용합니다.
 
 2. 아래 명령어를 통해 네트워크 설정 반영
 
-   ```bash
+   ```
    sudo netplan apply
    ```
 
 3. 아래 명령어를 통해 인터페이스(`eth0`)에 할당된 IP 주소 확인
 
-   ```bash
+   ```
    ip a
    ```
 
@@ -234,7 +234,7 @@ PS5 DualSense 컨트롤러를 사용해 ANTBot을 수동 조작할 수 있습니
 
 SSD를 마운트하기 위해 아래 스크립트를 터미널에서 실행합니다.
 
-```bash
+```
 # SSD 파티션 초기화
 
 sudo /sbin/parted /dev/nvme0n1 mklabel gpt --script

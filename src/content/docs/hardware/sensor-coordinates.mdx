@@ -1,0 +1,66 @@
+---
+title: 2.5 센서 사양
+description: ANTBot 센서 구성 및 좌표 기준 — base_link 원점 기준 6DoF 위치
+sidebar:
+  order: 5
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+ANTBot에 탑재된 센서 목록과 `base_link` 기준 좌표입니다.
+
+## 센서 구성
+
+| 센서 | 모델 | 수량 | 연결 | 비고 |
+| :--- | :--- | :---: | :--- | :--- |
+| 3D LiDAR | Vanjee WLR-722 | 1 | Ethernet | 360° 포인트 클라우드 |
+| 2D LiDAR | COIN D4 | 2 | USB Serial | 전방 + 후방 장애물 감지 |
+| RGB-D 카메라 | Orbbec Gemini 336L | 1 | USB | Color + Depth, HW 정합 |
+| 모노 카메라 | Novitec V4L2 | 3 | V4L2 | 등거리 렌즈, 640×360 @ 30fps |
+| 후방 카메라 | Generic V4L2 | 1 | V4L2 | 15 FPS |
+| 적재함 카메라 | USB Camera | 1 | USB | 적재 상태 모니터링 |
+| IMU | 6축 (RCU U60) | 1 | DXL Serial | 200Hz, 상보 필터 |
+| GNSS | u-blox | 1 | Serial | GPS 수신기 |
+| 초음파 | - | 2 | RCU | 근접 장애물 감지 |
+
+---
+
+## 센서 좌표
+
+단위: mm (위치), degree (각도).
+
+:::caution[추후 추가 예정]
+센서 좌표 다이어그램은 준비 중입니다.
+:::
+
+<Tabs>
+  <TabItem label="카메라">
+    | 센서 | 위치 | X | Y | Z | Roll | Pitch | Yaw |
+    | :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+    | Mono Cam | LEFT | 260.0 | 258.95 | 584.5 | 0 | 0 | -90 |
+    | Mono Cam | CENTER | 362.25 | 0 | 584.5 | 0 | 0 | 0 |
+    | Mono Cam | RIGHT | 260.0 | -258.95 | 584.5 | 0 | 0 | 90 |
+    | Mono Cam | BACK | -373.5 | 0 | 296.0 | 0 | 180 | 0 |
+    | Depth Cam | CENTER | 348.563 | 0 | 526.2 | 0 | 30 | 0 |
+  </TabItem>
+  <TabItem label="LiDAR">
+    | 센서 | 위치 | X | Y | Z | Roll | Pitch | Yaw |
+    | :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+    | LiDAR | 2D FRONT | 320.0 | 0 | 252.0 | 180 | 0 | 0 |
+    | LiDAR | 2D BACK | -320.0 | 0 | 252.0 | 0 | 180 | 0 |
+    | LiDAR | 3D | 225.233 | 0 | 721.313 | 0 | 10 | -90 |
+  </TabItem>
+  <TabItem label="기타 센서">
+    | 센서 | X | Y | Z | Roll | Pitch | Yaw |
+    | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
+    | IMU (RCU U60) | 240.0 | 0 | 379.2 | 0 | 0 | 180 |
+    | GNSS | 202.6 | -128.0 | 657.0 | 0 | 0 | 180 |
+    | Magnetometer (RCU U59) | 240.0 | -11.0 | 379.2 | 0 | 0 | 0 |
+    | Charging Coil | -299.0 | 0 | 170.627 | 0 | 0 | 0 |
+  </TabItem>
+</Tabs>
+
+:::note
+좌표계는 ROS 표준 (X=전방, Y=좌측, Z=상단, 오른손 법칙)을 따릅니다.
+URDF에서 이 좌표를 확인하려면 [`antbot_description/urdf/sensors.xacro`](https://github.com/ROBOTIS-move/antbot/blob/main/antbot_description/urdf/sensors.xacro)를 참조하세요.
+:::

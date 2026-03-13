@@ -1,0 +1,215 @@
+---
+title: 3.5 시스템 아키텍처
+description: ANTBot 소프트웨어 아키텍처 및 데이터 흐름
+sidebar:
+  order: 5
+---
+
+import { Tabs, TabItem, FileTree, Card, CardGrid } from '@astrojs/starlight/components';
+import Mermaid from '../../../components/Mermaid.astro';
+
+## 시스템 블록 다이어그램
+
+ANTBot의 소프트웨어 스택은 **ros2_control** 프레임워크를 중심으로, 센서 드라이버와 텔레오퍼레이션이 독립적으로 동작하는 구조입니다.
+
+<Mermaid chart={`graph TD
+    cmdvel(["/cmd_vel"]):::topic --> swerve
+
+    subgraph ros2ctl["ros2_control Framework"]
+        direction TB
+        swerve["antbot_swerve_controller<br>역기구학 · 모션 프로파일링 · 오도메트리"]:::ctrl
+        swerve ---|HW Interfaces| hwif
+        hwif["antbot_hw_interface<br>BoardInterface — SystemInterface plugin"]:::ctrl
+    end
+
+    bringup["antbot_bringup<br>launch files"]:::util --> ros2ctl
+    desc["antbot_description<br>URDF / Xacro"]:::util --> ros2ctl
+
+    swerve --> odom(["/odom"]):::topic
+    swerve --> tf(["/tf"]):::topic
+
+    hwif --> libs["antbot_libs<br>Communicator"]:::util
+    libs --> serial{{"Serial — DXL 2.0 — 4 Mbps"}}:::bus
+    serial --> rcu["ANT-RCU<br>ID: 200 · S1-S4 · M1-M4"]:::hw
+    serial --> imuboard["IMU Board<br>ID: 200 · Accel · Gyro"]:::hw
+
+    subgraph sensors["Independent Sensors"]
+        cam["antbot_camera<br>V4L2 · USB · Gemini 336L"]:::sensor
+        imudrv["antbot_imu<br>6축 · 200 Hz"]:::sensor
+        vanjee["vanjee_lidar_sdk<br>WLR-722 · Ethernet"]:::sensor
+        coin["coin_d4_driver<br>2D LiDAR x2 · USB Serial"]:::sensor
+        ublox["ublox_gps<br>GNSS · Serial"]:::sensor
+    end
+
+    imudrv -.-> serial
+
+    classDef ctrl fill:#1e293b,stroke:#22c55e,stroke-width:2px,color:#e2e8f0
+    classDef sensor fill:#1e293b,stroke:#06b6d4,stroke-width:1.5px,color:#e2e8f0
+    classDef hw fill:#1e293b,stroke:#f59e0b,stroke-width:2px,color:#fbbf24
+    classDef bus fill:#0f172a,stroke:#f59e0b,stroke-width:1.5px,color:#f59e0b
+    classDef util fill:#1e293b,stroke:#475569,stroke-width:1px,color:#94a3b8
+    classDef topic fill:#22c55e26,stroke:#22c55e,stroke-width:1.5px,color:#22c55e
+`} />
+
+---
+
+## 데이터 흐름
+
+<Tabs>
+  <TabItem label="속도 명령 → 모터">
+    `/cmd_vel`로부터 실제 모터 제어까지의 데이터 흐름:
+
+    <Mermaid chart={`graph TD
+        A(["/cmd_vel — Twist"]):::topic
+        A --> B
+
+        B["antbot_swerve_controller<br>역기구학 계산 · 모션 프로파일링<br>스티어링 플립 최적화"]:::ctrl
+        B --> C
+
+        C["steering_position + wheel_velocity"]:::data
+        C --> D
+
+        D["antbot_hw_interface<br>DXL Protocol 2.0 패킷 변환 · Bulk Write"]:::ctrl
+        D --> E
+
+        E["antbot_libs — Communicator<br>USB Serial @ 4 Mbps"]:::util
+        E --> F
+
+        F["ANT-RCU Board — ID: 200"]:::hw
+        F --> G["S1~S4 스티어링 위치 제어"]:::hw
+        F --> H["M1~M4 휠 속도 제어"]:::hw
+
+        classDef ctrl fill:#1e293b,stroke:#22c55e,stroke-width:2px,color:#e2e8f0
+        classDef hw fill:#1e293b,stroke:#f59e0b,stroke-width:2px,color:#fbbf24
+        classDef util fill:#1e293b,stroke:#475569,stroke-width:1px,color:#94a3b8
+        classDef topic fill:#22c55e26,stroke:#22c55e,stroke-width:1.5px,color:#22c55e
+        classDef data fill:#22c55e14,stroke:#22c55e,stroke-width:1px,color:#22c55e
+    `} />
+  </TabItem>
+  <TabItem label="오도메트리 피드백">
+    모터 → 오도메트리까지의 피드백 루프:
+
+    <Mermaid chart={`graph TD
+        A["ANT-RCU Board<br>스티어링 위치 + 휠 속도 + 엔코더"]:::hw
+        A --> B
+
+        B["antbot_hw_interface<br>read · Bulk Read → state interfaces"]:::ctrl
+        B --> C
+
+        C["antbot_swerve_controller<br>SVD 기반 오도메트리 풀이<br>RK4 적분 → 위치/속도 추정"]:::ctrl
+        C --> D
+        C --> E
+
+        D(["/odom — Odometry"]):::topic
+        E(["/tf — odom → base_link"]):::topic
+
+        C --> F["추가 퍼블리시<br>/battery_state · /sensor/ultrasound<br>서비스: cargo · headlight · wiper"]:::extra
+
+        classDef ctrl fill:#1e293b,stroke:#22c55e,stroke-width:2px,color:#e2e8f0
+        classDef hw fill:#1e293b,stroke:#f59e0b,stroke-width:2px,color:#fbbf24
+        classDef topic fill:#22c55e26,stroke:#22c55e,stroke-width:1.5px,color:#22c55e
+        classDef extra fill:#1e293b,stroke:#475569,stroke-width:1px,color:#64748b
+    `} />
+  </TabItem>
+  <TabItem label="센서 퍼블리시">
+    각 센서 드라이버는 독립적으로 토픽을 퍼블리시합니다:
+
+    | 드라이버 | 출력 토픽 | 주기 |
+    | :--- | :--- | :--- |
+    | antbot_imu | `/imu_node/imu/accel_gyro` | **200 Hz** |
+    | antbot_camera (V4L2) | `/sensor/camera/v4l2/*/image_raw` | 15~30 Hz |
+    | antbot_camera (Gemini) | depth + color image | 15 Hz |
+    | vanjee_lidar_sdk | `/sensor/lidar_3d/point_cloud` | 10 Hz |
+    | coin_d4_driver | `/sensor/lidar_2d_{front,back}/scan` | 10 Hz |
+    | ublox | `/fix` (NavSatFix) | 1~10 Hz |
+  </TabItem>
+</Tabs>
+
+---
+
+## Launch 의존성 그래프
+
+`bringup.launch.py`가 전체 시스템을 순차적으로 실행합니다:
+
+<FileTree>
+
+- bringup.launch.py **전체 시스템**
+  - robot_state_publisher.launch.py URDF -> /tf, /tf_static
+  - controller.launch.py ros2_control + swerve controller
+  - imu.launch.py 6축 IMU (200 Hz)
+  - lidar_2d.launch.py 2x COIN D4 (USB Serial)
+  - lidar_3d.launch.py Vanjee WLR-722 (Ethernet)
+  - ublox_gps_node-launch.py u-blox GNSS
+  - camera.launch.py V4L2 + USB + RGB-D
+  - teleop_joy.launch.py DualSense 조이스틱
+
+</FileTree>
+
+---
+
+## 디렉토리 구조
+
+<FileTree>
+
+- antbot/
+  - antbot/ 메타 패키지
+  - antbot_bringup/
+    - launch/ bringup, controller, sensor launch
+    - config/ LiDAR 3D YAML, RViz 설정
+  - antbot_description/
+    - urdf/ antbot.xacro, base, wheel, sensors, ros2_control
+    - meshes/ STL 메시 파일
+  - antbot_swerve_controller/
+    - src/ IK 솔버, 오도메트리, 모션 프로파일러
+    - antbot_swerve_controller/ generate_parameter_library YAML
+  - antbot_hw_interface/
+    - src/ BoardInterface 구현
+    - config/ 컨트롤 테이블 XML
+  - antbot_libs/
+    - src/ Communicator, ControlTableParser
+    - include/ constants.hpp
+  - antbot_interfaces/
+    - msg/ CargoStatus.msg
+    - srv/ CargoCommand, WiperOperation, DirectRead/Write
+  - antbot_camera/
+    - param/ camera_config.yaml
+  - antbot_imu/ IMU 드라이버
+  - antbot_teleop/ 텔레오퍼레이션 (Python)
+  - vanjee_lidar_sdk/ Vanjee 3D LiDAR
+  - vanjee_lidar_msg/ LiDAR 메시지
+  - setting.sh 의존성 설치 스크립트
+  - additional_repos.repos 외부 저장소 목록
+
+</FileTree>
+
+---
+
+## 하드웨어 통신 구조
+
+ANTBot의 모든 하드웨어 통신은 **Dynamixel Protocol 2.0**을 통해 이루어집니다:
+
+| 연결 | 장치 | 포트 | 보드레이트 | ID |
+| :--- | :--- | :--- | :--- | :---: |
+| `RCU` | ANT-RCU 보드 | `/dev/ttyUSB0` | 4,000,000 bps | 200 |
+| `IMU` | IMU 보드 | `/dev/ttyUSB1` | 4,000,000 bps | 200 |
+
+### ros2_control 인터페이스
+
+<Tabs>
+  <TabItem label="Command Interfaces">
+    | Joint | position | velocity | acceleration |
+    | :--- | :---: | :---: | :---: |
+    | `steering_{corner}_joint` | O | opt | opt |
+    | `wheel_{corner}_joint` | - | O | O |
+  </TabItem>
+  <TabItem label="State Interfaces">
+    | Joint | position | velocity | effort |
+    | :--- | :---: | :---: | :---: |
+    | `steering_{corner}_joint` | O | - | current |
+    | `wheel_{corner}_joint` | encoder | O | current |
+  </TabItem>
+</Tabs>
+
+:::tip
+`corner`는 `front_left`, `front_right`, `rear_left`, `rear_right` 중 하나입니다.
+:::

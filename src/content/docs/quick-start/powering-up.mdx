@@ -1,0 +1,75 @@
+---
+title: 4.2 전원 켜기
+description: ANTBot 전원 켜기 및 부팅 확인
+sidebar:
+  order: 2
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+## 전원 켜기
+
+<Steps>
+
+1. **비상정지 버튼**이 해제 상태(팝업)인지 확인합니다
+
+2. **전원 버튼**을 **beep음이 들릴 때까지** 누릅니다 (약 1~2초)
+
+3. 플래그 LED가 점등되면서 **부팅이 시작**됩니다
+
+</Steps>
+
+---
+
+## 부팅 과정
+
+전원이 켜지면 다음 순서로 시스템이 초기화됩니다:
+
+<Steps>
+
+1. `~30초` **Jetson AGX Orin 부팅** — 하드웨어 초기화, UEFI
+
+2. `~10초` **Ubuntu 22.04 로드** — 커널 + systemd
+
+3. `자동` **systemd `antbot` 서비스** 자동 실행
+
+4. `순차` **ROS 2 노드 기동** — controller → SLAM → navigation → ...
+
+5. `~5-10초` **IMU 자동 캘리브레이션** — 정지 상태 필수!
+
+</Steps>
+
+:::caution
+부팅 중에는 로봇을 움직이지 마세요. IMU 캘리브레이션이 정상적으로 완료되려면 로봇이 **정지 상태**를 유지해야 합니다.
+:::
+
+---
+
+## 부팅 확인
+
+SSH로 접속하여 시스템 상태를 확인할 수 있습니다:
+
+```
+# SSH 접속
+ssh antbot@192.168.6.2
+
+# 서비스 상태 확인
+systemctl status antbot
+
+# ROS 2 노드 확인
+ros2 node list
+
+# 토픽 확인
+ros2 topic list
+```
+
+---
+
+## 전원 끄기
+
+전원 버튼을 약 **3초간 길게** 누르면 안전하게 종료됩니다.
+
+:::danger
+**전원을 강제로 차단하지 마세요.** 파일 시스템 손상이 발생할 수 있습니다.
+반드시 전원 버튼 또는 `sudo shutdown now` 명령을 통해 종료해 주세요.
+:::

@@ -1,0 +1,64 @@
+---
+title: 2.6 온보드 컴퓨터 사양
+description: ANTBot 온보드 컴퓨터 사양
+sidebar:
+  order: 6
+---
+
+import { Tabs, TabItem, Badge, Card, CardGrid } from '@astrojs/starlight/components';
+
+ANTBot은 시스템 제어를 위해 ROS2 API를 통해 제어할 수 있습니다.
+
+---
+
+## 플랫폼 기본 정보
+
+| 항목 | 내용 |
+| :--- | :--- |
+| **ROS2 배포판** | Humble |
+| **DDS 미들웨어** | FastDDS |
+| **OS 및 커널** | Ubuntu 22.04 / 5.15.136-tegra |
+| **JetPack** | 6.0 (L4T R36.3.0) |
+| **부팅 시 자동 실행** | systemd 서비스명: `antbot` |
+
+---
+
+## 컴퓨팅 보드 사양
+
+<Tabs>
+  <TabItem label="프로세서">
+    | 항목 | 상세 내용 |
+    | :--- | :--- |
+    | **모델명** | NVIDIA Jetson AGX Orin 32GB |
+    | **CPU** | <Badge text="8-core NVIDIA Arm Cortex-A78AE" variant="tip" />  |
+    | **아키텍처** | v8.2 64-bit |
+    | **GPU** | <Badge text="NVIDIA Ampere" variant="caution" /> |
+    | **캐시 메모리** | 2MB L2 + 4MB L3 |
+  </TabItem>
+  <TabItem label="메모리">
+    | 항목 | 상세 내용 |
+    | :--- | :--- |
+    | **RAM** | <Badge text="32GB LPDDR5" variant="success" /> |
+    | **인터페이스** | 256-bit |
+    | **대역폭** | 204.8 GB/s |
+  </TabItem>
+</Tabs>
+
+---
+
+## 성능 요약
+
+<CardGrid>
+  <Card title="AI 추론" icon="star">
+   CUDA · TensorRT 가속<br/>
+    실시간 객체 감지 + 상황 판단
+  </Card>
+    <Card title="멀티코어 제어" icon="setting">
+   코어 친화도 배정<br/>
+    실시간 제어 / 고부하 연산 분리
+  </Card>
+  <Card title="고대역 메모리" icon="rocket">
+   LPDDR5 · 204.8 GB/s<br/>
+    포인트 클라우드 + 영상 실시간 처리
+  </Card>
+</CardGrid>

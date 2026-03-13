@@ -1,0 +1,298 @@
+---
+title: 3.2 자체 개발 패키지
+description: ROBOTIS AI 자체 개발 ANTBot 패키지 상세 설명
+sidebar:
+  order: 2
+---
+
+import { Badge, Tabs, TabItem, Steps, FileTree } from '@astrojs/starlight/components';
+
+ROBOTIS AI에서 개발한 ANTBot 전용 핵심 패키지 리스트와 상세 설명입니다.
+
+## 패키지 요약
+
+| 패키지 | 언어 | 설명 |
+| :--- | :---: | :--- |
+| [`antbot`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot) | - | 메타 패키지 |
+| [`antbot_bringup`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot_bringup) | `Python` | 전체 시스템 launch 파일 |
+| [`antbot_description`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot_description) | `Xacro` | URDF/Xacro 로봇 모델 |
+| [`antbot_swerve_controller`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot_swerve_controller) | `C++17` | 스워브 드라이브 컨트롤러 |
+| [`antbot_hw_interface`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot_hw_interface) | `C++17` | ros2_control 하드웨어 인터페이스 |
+| [`antbot_libs`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot_libs) | `C++17` | 공유 통신 라이브러리 |
+| [`antbot_interfaces`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot_interfaces) | `IDL` | 커스텀 메시지/서비스 |
+| [`antbot_camera`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot_camera) | `C++17` | 멀티 카메라 드라이버 |
+| [`antbot_imu`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot_imu) | `C++17` | IMU 드라이버 |
+| [`antbot_teleop`](https://github.com/ROBOTIS-move/antbot/tree/main/antbot_teleop) | `Python` | 키보드/조이스틱 텔레오퍼레이션 |
+
+---
+
+## antbot_bringup
+
+전체 로봇 시스템을 순차적으로 실행하는 launch 파일 모음입니다.
+
+**Launch 파일:**
+
+| Launch 파일 | 실행 대상 |
+| :--- | :--- |
+| `bringup.launch.py` | 전체 시스템 (아래 모든 launch 포함) |
+| `robot_state_publisher.launch.py` | URDF -> `/tf`, `/tf_static` |
+| `controller.launch.py` | ros2_control + swerve controller |
+| `imu.launch.py` | 6축 IMU (200 Hz) |
+| `lidar_2d.launch.py` | 2x COIN D4 (USB Serial) |
+| `lidar_3d.launch.py` | Vanjee WLR-722 (Ethernet) |
+| `ublox_gps_node-launch.py` | u-blox GNSS |
+| `camera.launch.py` | V4L2 + USB + RGB-D 카메라 |
+| `teleop_joy.launch.py` | DualSense 조이스틱 텔레오퍼레이션 |
+| `view.launch.py` | RViz2 시각화 (별도 PC용) |
+
+---
+
+## antbot_description
+
+URDF/Xacro로 정의된 전체 로봇 모델입니다. 센서 프레임, 메시, ros2_control 설정이 포함됩니다.
+
+**Xacro 구조:**
+
+| 파일 | 역할 |
+| :--- | :--- |
+| `antbot.xacro` | 최상위 로봇 정의 |
+| `base.xacro` | 베이스 링크 (메시, 관성) |
+| `wheel.xacro` | 스워브 휠 모듈 매크로 |
+| `sensors.xacro` | 센서 프레임 마운팅 |
+| `ros2_control.xacro` | 하드웨어 인터페이스 정의 |
+
+**조인트 정의:**
+- **스티어링**: `steering_{corner}_joint` (revolute, Z축, -90° ~ +90°)
+- **휠**: `wheel_{corner}_joint` (continuous, Y축)
+- corner: `front_left`, `front_right`, `rear_left`, `rear_right`
+
+---
+
+## antbot_swerve_controller
+
+ros2_control 기반 4WD 독립 스워브 드라이브 컨트롤러입니다.
+
+**핵심 기능:**
+- 역기구학(IK) 기반 스티어링/휠 속도 계산
+- 모션 프로파일링 (가속/감속 제어)
+- SVD/QR 기반 오도메트리 풀이
+- RK4 적분 방식 오도메트리
+- 비동축(non-coaxial) 스워브 보정
+- 스티어링 플립(flip) 최적화
+- 휠 포화(saturation) 스케일링
+
+<Tabs>
+  <TabItem label="로봇 기하학">
+    | 파라미터 | 값 | 설명 |
+    | :--- | :--- | :--- |
+    | `wheel_radius` | 0.103 m | 휠 반경 |
+    | `module_x_offsets` | [0.265, 0.265, -0.265, -0.265] m | 모듈 X 오프셋 (FL, FR, RL, RR) |
+    | `module_y_offsets` | [0.256, -0.256, 0.256, -0.256] m | 모듈 Y 오프셋 |
+    | `module_steering_limit` | -60° ~ +60° (-1.047 ~ 1.047 rad) | 스티어링 한계 |
+    | `module_wheel_speed_limit` | -50.0 ~ 50.0 rad/s | 휠 속도 한계 |
+  </TabItem>
+  <TabItem label="속도 제한">
+    | 파라미터 | 값 |
+    | :--- | :--- |
+    | `linear.x.max_velocity` | **2.0** m/s |
+    | `linear.x.max_acceleration` | 1.0 m/s² |
+    | `linear.y.max_velocity` | **1.5** m/s |
+    | `angular.z.max_velocity` | **2.0** rad/s |
+    | `angular.z.max_acceleration` | 1.0 rad/s² |
+    | `cmd_vel_timeout` | 0.5 s |
+    | `velocity_deadband` | 0.01 m/s |
+  </TabItem>
+  <TabItem label="오도메트리">
+    | 파라미터 | 값 | 설명 |
+    | :--- | :--- | :--- |
+    | `odom_solver_method` | `svd` | SVD, QR, pseudo_inverse 중 선택 |
+    | `odom_integration_method` | `rk4` | euler, rk2, rk4, analytic_swerve 중 선택 |
+    | `odom_frame_id` | `odom` | 오도메트리 프레임 |
+    | `base_frame_id` | `base_link` | 로봇 베이스 프레임 |
+    | `enable_odom_tf` | `true` | odom -> base_link TF 발행 |
+    | `velocity_rolling_window_size` | 1 | 속도 이동 평균 윈도우 |
+  </TabItem>
+</Tabs>
+
+---
+
+## antbot_hw_interface
+
+ANT-RCU 보드와 통신하는 ros2_control `SystemInterface` 플러그인입니다.
+
+**하드웨어 사양:**
+
+| 항목 | 값 |
+| :--- | :--- |
+| 시리얼 포트 | `/dev/ttyUSB0` |
+| 보드 ID | 200 |
+| 보드레이트 | 4,000,000 bps |
+| 프로토콜 | Dynamixel 2.0 |
+
+**제어 범위:**
+
+| 구분 | 범위 |
+| :--- | :--- |
+| 스티어링 (S1~S4) | -56.175° ~ +56.175° |
+| 스티어링 기어비 | 2.43 |
+| 휠 RPM (M1~M4) | -185 ~ +185 RPM |
+| 휠 가속도 | 200 rev/min² |
+
+**추가 퍼블리시:**
+- `sensor_msgs/BatteryState` - 배터리 상태 (전압, 전류, SoC, 온도)
+- `/sensor/ultrasound` (`Float64MultiArray`) - 초음파 거리
+
+**서비스:**
+- `cargo/command` (`CargoCommand`) - 적재함 잠금/해제
+- `headlight/operation` (`SetBool`) - 전조등 ON/OFF
+- `wiper/operation` (`WiperOperation`) - 와이퍼 모드 설정
+
+---
+
+## antbot_libs
+
+Dynamixel Protocol 2.0 기반 시리얼 통신 및 컨트롤 테이블 파싱 라이브러리입니다.
+
+**주요 클래스:**
+- `Communicator` - 스레드 세이프 시리얼 통신 (Bulk Read/Write)
+- `ControlTableParser` - XML 기반 하드웨어 레지스터 맵 파싱
+- `NodeThread` - 백그라운드 스레드 유틸리티
+
+**주요 상수:**
+
+| 상수 | 값 | 설명 |
+| :--- | :--- | :--- |
+| `STEERING_RAD_PER_PULSE` | π/2048 | 스티어링 1 pulse당 각도 |
+| `TICK_TO_RAD` | π/8192 | 엔코더 1 tick당 각도 |
+| `RCU_RPM_RESOLUTION` | 0.01 RPM | RCU RPM 해상도 |
+| `WHEEL_ACCEL_SCALE` | 53.64418 | 휠 가속도 스케일 |
+| `STEERING_ACCEL_SCALE` | 214.577 | 스티어링 가속도 스케일 |
+
+---
+
+## antbot_interfaces
+
+ANTBot 전용 커스텀 ROS 2 메시지 및 서비스 정의입니다.
+
+**메시지:**
+- `CargoStatus.msg` - 적재함 상태 (door: CLOSED/OPENED, lock: NEUTRAL/LOCKED/UNLOCKED)
+
+**서비스:**
+
+| 서비스 | 용도 |
+| :--- | :--- |
+| `CargoCommand.srv` | 적재함 잠금(0)/해제(1) |
+| `WiperOperation.srv` | 와이퍼 모드(OFF/ONCE/REPEAT) + 주기 설정 |
+| `DirectRead.srv` | 컨트롤 테이블 아이템 직접 읽기 |
+| `DirectWrite.srv` | 컨트롤 테이블 아이템 직접 쓰기 |
+
+---
+
+## antbot_camera
+
+다형성(polymorphic) 멀티 드라이버 카메라 패키지입니다.
+
+**지원 드라이버:**
+1. **V4L2Driver** - Novitec 카메라 (ROM 캘리브레이션 지원) + 일반 V4L2
+2. **UsbDriver** - OpenCV 기반 USB 카메라
+3. **Gemini 336L** - Orbbec RGB-D (외부 orbbec_camera 노드)
+
+**기본 카메라 구성:**
+
+| 위치 | 드라이버 | 해상도 | FPS | 비고 |
+| :--- | :--- | :--- | :---: | :--- |
+| Left | V4L2 | 640x360 | 30 | 등거리 렌즈, UYVY |
+| Front | V4L2 | 640x360 | 30 | 등거리 렌즈, UYVY |
+| Right | V4L2 | 640x360 | 30 | 등거리 렌즈, UYVY |
+| Rear | V4L2 | 640x360 | 15 | 일반 V4L2, YUYV |
+| Cargo | USB | 640x480 | 10 | OpenCV USB 카메라 |
+| Depth | Gemini 336L | 640x480 | 15 | Color + Depth, HW 정합 |
+
+**토픽 네이밍:**
+```
+/sensor/camera/{driver_type}/{position}/image_raw
+/sensor/camera/{driver_type}/{position}/camera_info
+```
+
+---
+
+## antbot_imu
+
+6축 IMU 드라이버입니다. 상보 필터와 자동 캘리브레이션을 지원합니다.
+
+**사양:**
+
+| 항목 | 값 |
+| :--- | :--- |
+| 시리얼 포트 | `/dev/ttyUSB1` |
+| 디바이스 ID | 200 |
+| 보드레이트 | 4,000,000 bps |
+| 퍼블리시 주기 | 200 Hz |
+| 필터 컷오프 | 10.0 Hz |
+| 캘리브레이션 샘플 수 | 350 |
+
+**자동 캘리브레이션 프로세스:**
+
+<Steps>
+
+1. 오도메트리 데이터 대기 (정지 상태 감지)
+
+2. **350개** 정적 샘플 수집
+
+3. 자이로스코프 바이어스(X, Y, Z) 및 중력 기준 계산
+
+4. Gyro Z 바이어스가 임계값 초과 시 **최대 3회 재시도**
+
+5. 캘리브레이션 중 로봇이 움직이면 샘플 폐기 후 재시작
+
+</Steps>
+
+---
+
+## antbot_teleop
+
+키보드 및 PS5 DualSense 조이스틱 텔레오퍼레이션 패키지입니다.
+
+<Tabs>
+  <TabItem label="키보드">
+    ```
+       q    w    e
+       a    s    d
+            x
+    ```
+
+    | 키 | 동작 |
+    | :---: | :--- |
+    | <kbd>W</kbd> / <kbd>X</kbd> | 전진 / 후진 |
+    | <kbd>A</kbd> / <kbd>D</kbd> | 좌측 / 우측 이동 (스트레이프) |
+    | <kbd>Q</kbd> / <kbd>E</kbd> | 반시계 / 시계 회전 |
+    | <kbd>S</kbd> | 정지 |
+    | <kbd>1</kbd> ~ <kbd>9</kbd> | 속도 레벨 |
+    | <kbd>ESC</kbd> | 종료 |
+
+    ```
+    ros2 run antbot_teleop teleop_keyboard
+    ```
+  </TabItem>
+  <TabItem label="조이스틱 (DualSense)">
+    | 입력 | 동작 |
+    | :--- | :--- |
+    | **좌측 스틱 Y축** | 전진 / 후진 |
+    | **좌측 스틱 X축** | 커브 주행 (이동 중) |
+    | **L2 / R2 트리거** | 제자리 회전 |
+    | **Triangle** | 속도 레벨 UP |
+    | **Cross** | 속도 레벨 DOWN |
+    | **Square** | 적재함 잠금 |
+    | **Circle** | 적재함 해제 |
+    | **L1** | 전조등 토글 |
+    | **R1** | 와이퍼 토글 |
+
+    ```
+    ros2 launch antbot_teleop teleop_joy.launch.py
+    ```
+  </TabItem>
+</Tabs>
+
+**주행 모드:**
+- <Badge text="커브 주행" variant="success" /> `|vx| >= 0.05 m/s` — X축이 각속도를 제어, 스티어링 한계 내에서 동작
+- <Badge text="제자리 회전" variant="note" /> `|vx| < 0.05 m/s` — L2/R2 트리거로 회전 제어

@@ -7,7 +7,7 @@ sidebar:
 
 SSD를 마운트하기 위해 아래 스크립트를 터미널에서 실행합니다.
 
-```bash
+```
 # SSD 파티션 초기화
 sudo /sbin/parted /dev/nvme0n1 mklabel gpt --script
 sudo mkfs.ext4 /dev/nvme0n1
