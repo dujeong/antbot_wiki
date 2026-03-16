@@ -10,7 +10,7 @@ hero:
     file: ../../assets/images/antbot_front.png
   actions:
     - text: 빠른 시작 가이드
-      link: /antbot_wiki/quick-start/unboxing/
+      link: /antbot_wiki/introduction/
       icon: right-arrow
       variant: primary
     - text: GitHub Repository
@@ -19,7 +19,7 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid, LinkCard, Tabs, TabItem, Steps, Badge, Icon } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard, Badge } from '@astrojs/starlight/components';
 
 ---
 
@@ -27,24 +27,13 @@ import { Card, CardGrid, LinkCard, Tabs, TabItem, Steps, Badge, Icon } from '@as
 
 <CardGrid stagger>
   <Card title="4WD 독립 스워브 드라이브" icon="setting">
-    4륜 독립 조향 — 전방향 이동, 제자리 회전<br/>
-    IK 기반 정밀 경로 추종
+    4륜 독립 조향 — 전방향 이동, 제자리 회전
   </Card>
   <Card title="ROS 2 Humble + ros2_control" icon="puzzle">
-    **9개 모듈형 패키지** 아키텍처<br/>
-    C++17 제어 + Python 3 운영
+    모듈형 패키지 아키텍처
   </Card>
-  <Card title="멀티 센서 퓨전" icon="magnifier">
-    **13개 센서** — 360° 환경 인지<br/>
-    3D/2D LiDAR, RGB-D, IMU, GNSS
-  </Card>
-  <Card title="Jetson AGX Orin 32GB" icon="laptop">
-    Ampere GPU + 8코어 Arm CPU<br/>
-    CUDA·TensorRT 실시간 추론
-  </Card>
-  <Card title="전천후 실외 운행" icon="sun">
-    IPX4 방수 · 90mm 단차 주파<br/>
-    -10~40°C · 5G(LTE-CA)
+  <Card title="다양한 센서" icon="magnifier">
+    3D/2D LiDAR, RGB-D Camera, IMU, GNSS
   </Card>
   <Card title="완전한 오픈소스" icon="github">
     **Apache License 2.0**<br/>
@@ -54,68 +43,19 @@ import { Card, CardGrid, LinkCard, Tabs, TabItem, Steps, Badge, Icon } from '@as
 
 ---
 
-## 한눈에 보기
-
-<Tabs>
-  <TabItem label="로봇 사양">
-    | 항목 | 사양 |
-    | :--- | :--- |
-    | **드라이브** | 4WD 독립 조향 스워브 (AWD) |
-    | **사이즈** | L762 x W582 x H766 mm (깃발 포함 H1,373) |
-    | **무게** | 62.1 kg |
-    | **주행 속도** | 0.5 ~ 2.0 m/s |
-    | **적재 중량** | 권장 10 kg / 최대 20 kg |
-    | **카고** | L410 x W410 x H320 mm (53.8L) |
-    | **등판 각도** | 15° |
-    | **단차 주파** | 최대 90 mm (5 kg 이하 적재 시) |
-    | **방수 등급** | IPX4 |
-    | **사용 온도** | -10 ~ 40°C |
-  </TabItem>
-  <TabItem label="센서 구성">
-    | 센서 | 모델 | 수량 | 연결 |
-    | :--- | :--- | :---: | :--- |
-    | 3D LiDAR | Vanjee WLR-722 | 1 | Ethernet |
-    | 2D LiDAR | COIN D4 | 2 | USB Serial |
-    | RGB-D Camera | Orbbec Gemini 336L | 1 | USB |
-    | Mono Camera | Novitec V4L2 | 3 | V4L2 |
-    | Rear Camera | Generic V4L2 | 1 | V4L2 |
-    | Cargo Camera | USB Camera | 1 | USB |
-    | IMU | 6축 (RCU 내장) | 1 | Serial |
-    | GNSS | u-blox | 1 | Serial |
-    | Ultrasonic | - | 2 | RCU |
-  </TabItem>
-  <TabItem label="컴퓨팅">
-    | 항목 | 사양 |
-    | :--- | :--- |
-    | **모델** | NVIDIA Jetson AGX Orin 32GB |
-    | **CPU** | 8-core Arm Cortex-A78AE v8.2 |
-    | **GPU** | NVIDIA Ampere |
-    | **RAM** | 32GB LPDDR5 (256-bit, 204.8GB/s) |
-    | **Cache** | 2MB L2 + 4MB L3 |
-    | **OS** | Ubuntu 22.04 (5.15.136-tegra) |
-    | **ROS 2** | Humble Hawksbill |
-    | **DDS** | FastDDS |
-    | **JetPack** | 6.0 (L4T R36.3.0) |
-    | **충전** | 무선 자율 충전 |
-    | **배터리** | LFP 65Ah / 25.6V |
-  </TabItem>
-</Tabs>
-
----
-
 ## 문서 구성
 
 <CardGrid>
-  <LinkCard title="소개" description="제품 개요, 센서 구성, 기본 패키지 구성품" href="/antbot_wiki/introduction/" />
+  <LinkCard title="소개" description="제품 개요, 기본 패키지 구성품" href="/antbot_wiki/introduction/" />
   <LinkCard title="하드웨어" description="외관 구조, 센서 좌표, 온보드 컴퓨터, 전체 사양표" href="/antbot_wiki/hardware/exterior/" />
-  <LinkCard title="소프트웨어" description="9개 패키지 아키텍처, 데이터 흐름, 개발 환경 구축" href="/antbot_wiki/software/repository/" />
-  <LinkCard title="빠른 시작" description="개봉부터 첫 주행까지 — 단계별 시작 가이드" href="/antbot_wiki/quick-start/unboxing/" />
-  <LinkCard title="개발 가이드" description="컨트롤 테이블, ROS 토픽/서비스 전체 명세, TF 트리" href="/antbot_wiki/development-guide/control-table/" />
+  <LinkCard title="소프트웨어" description="자체 개발 패키지, 개발 환경 구축" href="/antbot_wiki/software/repository/" />
+  <LinkCard title="빠른 시작" description="전원 켜기부터 첫 주행까지 — 단계별 시작 가이드" href="/antbot_wiki/quick-start/powering-up/" />
+  <LinkCard title="개발 가이드" description="컨트롤 테이블, ROS 토픽/서비스 명세" href="/antbot_wiki/development-guide/control-table/" />
   <LinkCard title="유지보수" description="펌웨어 진단, 에러코드 해석, 모터 트러블슈팅" href="/antbot_wiki/maintenance/firmware-diagnostics/" />
 </CardGrid>
 
 ---
 
-<Badge text="V1.1" variant="success" /> 2026-03-13 — 위키 리디자인 (아키텍처, ROS 토픽, 패키지 상세)
+## 릴리즈 노트
 
-<Badge text="V1.0" variant="note" /> 2026-02-18 — 위키 초안 작성
+<Badge text="V1.2" variant="success" /> 2026-03-16 — 위키 개선 (페이지 간소화, 콘텐츠 정리)

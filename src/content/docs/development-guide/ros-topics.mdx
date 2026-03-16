@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Tabs, TabItem, Badge, Card, CardGrid, Steps } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Badge } from '@astrojs/starlight/components';
 
 ANTBot에서 사용하는 전체 ROS 2 토픽 및 서비스 명세입니다.
 
@@ -14,16 +14,6 @@ ANTBot에서 사용하는 전체 ROS 2 토픽 및 서비스 명세입니다.
 ## Published 토픽
 
 <Tabs>
-  <TabItem label="오도메트리 & TF">
-    | 토픽 | 타입 | 퍼블리셔 | 설명 |
-    | :--- | :--- | :--- | :--- |
-    | `/odom` | `nav_msgs/Odometry` | swerve_controller | 로봇 오도메트리 (pose + twist) |
-    | `/tf` | `tf2_msgs/TFMessage` | swerve_controller | odom → base_link 변환 |
-    | `/tf_static` | `tf2_msgs/TFMessage` | robot_state_publisher | 정적 센서 프레임 변환 |
-    | `~/planned_trajectory` | `trajectory_msgs/JointTrajectory` | swerve_controller | 모션 프로파일 시각화용 |
-    | `~/joint_commanders` | `sensor_msgs/JointState` | swerve_controller | 명령된 조인트 상태 |
-    | `~/limited_cmd_vel` | `geometry_msgs/Twist` | swerve_controller | 리미터 적용 후 속도 |
-  </TabItem>
   <TabItem label="센서 (IMU / LiDAR)">
     **IMU** <Badge text="200 Hz" variant="success" />
 
@@ -35,9 +25,9 @@ ANTBot에서 사용하는 전체 ROS 2 토픽 및 서비스 명세입니다.
 
     | 토픽 | 타입 | 센서 | 설명 |
     | :--- | :--- | :--- | :--- |
-    | `/sensor/lidar_3d/point_cloud` | `sensor_msgs/PointCloud2` | <Badge text="Vanjee WLR-722" variant="note" /> | 3D 포인트 클라우드 |
-    | `/sensor/lidar_2d_front/scan` | `sensor_msgs/LaserScan` | <Badge text="COIN D4" variant="tip" /> | 전방 2D 레이저 스캔 |
-    | `/sensor/lidar_2d_back/scan` | `sensor_msgs/LaserScan` | <Badge text="COIN D4" variant="tip" /> | 후방 2D 레이저 스캔 |
+    | `/sensor/lidar_3d/point_cloud` | `sensor_msgs/PointCloud2` | Vanjee WLR-722 | 3D 포인트 클라우드 |
+    | `/sensor/lidar_2d_front/scan` | `sensor_msgs/LaserScan` | COIN D4 | 전방 2D 레이저 스캔 |
+    | `/sensor/lidar_2d_back/scan` | `sensor_msgs/LaserScan` | COIN D4 | 후방 2D 레이저 스캔 |
   </TabItem>
   <TabItem label="카메라">
     | 토픽 | 타입 | 설명 |
@@ -56,7 +46,7 @@ ANTBot에서 사용하는 전체 ROS 2 토픽 및 서비스 명세입니다.
   <TabItem label="배터리 & 초음파">
     | 토픽 | 타입 | 퍼블리셔 | 설명 |
     | :--- | :--- | :--- | :--- |
-    | (BatteryState 토픽) | `sensor_msgs/BatteryState` | hw_interface | 전압, 전류, SoC, 온도 |
+    | `/battery` | `sensor_msgs/BatteryState` | hw_interface | 전압, 전류, SoC, 온도 |
     | `/sensor/ultrasound` | `std_msgs/Float64MultiArray` | hw_interface | 초음파 센서 거리 (cm) |
   </TabItem>
 </Tabs>
@@ -68,46 +58,6 @@ ANTBot에서 사용하는 전체 ROS 2 토픽 및 서비스 명세입니다.
 | 토픽 | 타입 | 구독자 | 설명 |
 | :--- | :--- | :--- | :--- |
 | `/cmd_vel` | `geometry_msgs/Twist` | swerve_controller | 속도 명령 (linear x/y + angular z) |
-| `~/direct_joint_commands` | `sensor_msgs/JointState` | swerve_controller | 직접 조인트 명령 <Badge text="타임아웃 5s" variant="caution" /> |
-| `/odom` | `nav_msgs/Odometry` | antbot_imu | 정지 상태 감지 (캘리브레이션용) |
-
-### cmd_vel 입력 형식
-
-```
-geometry_msgs/Twist:
-  linear:
-    x: float64   # 전후 속도 (m/s), 양수=전진
-    y: float64   # 좌우 속도 (m/s), 양수=좌측
-    z: 0.0       # 미사용
-  angular:
-    x: 0.0       # 미사용
-    y: 0.0       # 미사용
-    z: float64   # 회전 속도 (rad/s), 양수=반시계
-```
-
-<Tabs>
-  <TabItem label="전진">
-    ```
-    # 0.5 m/s로 전진
-    ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
-      "{linear: {x: 0.5, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
-    ```
-  </TabItem>
-  <TabItem label="횡이동">
-    ```
-    # 0.3 m/s로 우측 이동
-    ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
-      "{linear: {x: 0.0, y: -0.3, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"
-    ```
-  </TabItem>
-  <TabItem label="제자리 회전">
-    ```
-    # 1.0 rad/s로 제자리 반시계 회전
-    ros2 topic pub /cmd_vel geometry_msgs/msg/Twist \
-      "{linear: {x: 0.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.0}}"
-    ```
-  </TabItem>
-</Tabs>
 
 ---
 
@@ -115,7 +65,7 @@ geometry_msgs/Twist:
 
 <Tabs>
   <TabItem label="적재함 제어">
-    **`cargo/command`** <Badge text="antbot_interfaces/CargoCommand" variant="note" />
+    **`cargo/command`** — `antbot_interfaces/CargoCommand`
 
     | 필드 | 타입 | 값 | 설명 |
     | :--- | :--- | :--- | :--- |
@@ -133,12 +83,12 @@ geometry_msgs/Twist:
     ```
   </TabItem>
   <TabItem label="전조등">
-    **`headlight/operation`** <Badge text="std_srvs/SetBool" variant="note" />
+    **`headlight/operation`** — `std_srvs/SetBool`
 
     | 동작 | 명령 |
     | :--- | :--- |
-    | <Badge text="ON" variant="success" /> 전조등 켜기 | `data: true` |
-    | <Badge text="OFF" variant="danger" /> 전조등 끄기 | `data: false` |
+    | 전조등 켜기 | `data: true` |
+    | 전조등 끄기 | `data: false` |
 
     ```
     # 전조등 ON
@@ -149,13 +99,13 @@ geometry_msgs/Twist:
     ```
   </TabItem>
   <TabItem label="와이퍼">
-    **`wiper/operation`** <Badge text="antbot_interfaces/WiperOperation" variant="note" />
+    **`wiper/operation`** — `antbot_interfaces/WiperOperation`
 
     | 필드 | 타입 | 값 | 설명 |
     | :--- | :--- | :--- | :--- |
-    | Request: `mode` | uint8 | <Badge text="0" variant="danger" /> OFF | 와이퍼 정지 |
-    | | | <Badge text="1" variant="tip" /> ONCE | 1회 작동 |
-    | | | <Badge text="2" variant="success" /> REPEAT | 반복 (주기: cycle_time) |
+    | Request: `mode` | uint8 | 0 = OFF | 와이퍼 정지 |
+    | | | 1 = ONCE | 1회 작동 |
+    | | | 2 = REPEAT | 반복 (주기: cycle_time) |
     | Request: `cycle_time` | float32 | 기본 1.0 | 반복 주기 (초) |
 
     ```
@@ -184,111 +134,3 @@ geometry_msgs/Twist:
     :::
   </TabItem>
 </Tabs>
-
----
-
-## 커스텀 메시지
-
-### CargoStatus.msg
-
-적재함 상태를 나타내는 메시지입니다.
-
-<Tabs>
-  <TabItem label="메시지 정의">
-    ```
-    # 도어 상태
-    uint8 DOOR_CLOSED = 0
-    uint8 DOOR_OPENED = 1
-    uint8 door_status
-
-    # 잠금 상태
-    uint8 LOCK_NEUTRAL  = 0
-    uint8 LOCK_LOCKED   = 1
-    uint8 LOCK_UNLOCKED = 2
-    uint8 lock_status
-    ```
-  </TabItem>
-  <TabItem label="상태 값 설명">
-    **도어 상태**
-
-    | 값 | 상수 | 의미 |
-    | :---: | :--- | :--- |
-    | <Badge text="0" variant="success" /> | `DOOR_CLOSED` | 도어 닫힘 |
-    | <Badge text="1" variant="caution" /> | `DOOR_OPENED` | 도어 열림 |
-
-    **잠금 상태**
-
-    | 값 | 상수 | 의미 |
-    | :---: | :--- | :--- |
-    | <Badge text="0" variant="note" /> | `LOCK_NEUTRAL` | 중립 |
-    | <Badge text="1" variant="success" /> | `LOCK_LOCKED` | 잠금 |
-    | <Badge text="2" variant="caution" /> | `LOCK_UNLOCKED` | 해제 |
-  </TabItem>
-</Tabs>
-
----
-
-## TF 프레임 트리
-
-```
-odom
- └── base_link
-      ├── base_footprint
-      ├── steering_front_left_link
-      │    └── wheel_front_left_link
-      ├── steering_front_right_link
-      │    └── wheel_front_right_link
-      ├── steering_rear_left_link
-      │    └── wheel_rear_left_link
-      ├── steering_rear_right_link
-      │    └── wheel_rear_right_link
-      ├── imu_link
-      ├── gps_link
-      ├── magnetometer_link
-      ├── camera_left_link
-      ├── camera_front_link
-      ├── camera_right_link
-      ├── camera_rear_link
-      ├── camera_depth_link
-      ├── lidar_2d_front_link
-      ├── lidar_2d_back_link
-      ├── lidar_3d_link
-      ├── ultrasound_left_link
-      ├── ultrasound_right_link
-      └── charging_coil_link
-```
-
-<CardGrid>
-  <Card title="구동계 프레임" icon="setting">
-    steering → wheel 계층 구조<br/>
-    4개 코너: FL, FR, RL, RR
-  </Card>
-  <Card title="센서 프레임" icon="magnifier">
-    카메라 5 · LiDAR 3 · IMU · GPS · 초음파 2<br/>
-    `base_link` 하위 정적 TF
-  </Card>
-  <Card title="특수 프레임" icon="puzzle">
-    `base_footprint` 지면 투영<br/>
-    `charging_coil_link` 도킹 기준점
-  </Card>
-</CardGrid>
-
----
-
-## QoS 프로파일
-
-각 토픽의 QoS(Quality of Service) 설정:
-
-| 토픽 유형 | Reliability | Durability | Depth |
-| :--- | :--- | :--- | :--- |
-| `/cmd_vel` | <Badge text="Reliable" variant="success" /> | Volatile | 10 |
-| `/odom` | <Badge text="Reliable" variant="success" /> | Volatile | 10 |
-| `/tf` | <Badge text="Reliable" variant="success" /> | Volatile | 100 |
-| 카메라 이미지 | <Badge text="Best Effort" variant="caution" /> | Volatile | 5 |
-| LiDAR 스캔 | <Badge text="Best Effort" variant="caution" /> | Volatile | 5 |
-| IMU 데이터 | <Badge text="Best Effort" variant="caution" /> | Volatile | 5 |
-
-:::tip[QoS 매칭 규칙]
-퍼블리셔와 서브스크라이버의 QoS 프로파일이 **호환**되어야 통신이 성립합니다.
-`Reliable` 퍼블리셔에 `Best Effort` 서브스크라이버는 연결되지만, 반대의 경우는 연결되지 않습니다.
-:::

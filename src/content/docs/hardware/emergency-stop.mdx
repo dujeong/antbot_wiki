@@ -37,17 +37,3 @@ import { Badge, Steps } from '@astrojs/starlight/components';
 비상정지 해제 후에도 모터가 즉시 동작하지 않습니다.
 모터 상태가 `IDLE` → `READY_ENTER` → `READY` 순서로 전환된 후에야 주행이 가능합니다.
 :::
-
----
-
-## ROS 2에서 확인
-
-```
-# 비상정지 상태 확인 (DirectRead 서비스)
-ros2 service call /direct_read antbot_interfaces/srv/DirectRead "{item_name: 'Estop_State'}"
-```
-
-| 값 | 상태 | 설명 |
-| :---: | :--- | :--- |
-| <Badge text="0" variant="success" /> | 정상 (OFF) | 주행 가능 |
-| <Badge text="1" variant="danger" /> | 비상정지 (ON) | 모터 정지, 토크 유지 |

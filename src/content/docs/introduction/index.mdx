@@ -5,95 +5,9 @@ sidebar:
   order: 1
 ---
 
-import { Card, CardGrid, Tabs, TabItem, Steps, LinkCard } from '@astrojs/starlight/components';
-
 **ANTBot**은 ROBOTIS AI에서 개발한 오픈소스 **실외 자율주행 배송 로봇**입니다.
 4개의 바퀴가 각각 독립적으로 조향하는 **스워브 드라이브(Swerve Drive)** 방식으로,
 전방향 이동과 제자리 회전이 가능하며, 라스트마일 배송에 최적화되어 있습니다.
-
----
-
-## 주요 특징
-
-<CardGrid stagger>
-  <Card title="4WD 독립 스워브 드라이브" icon="setting">
-    IK 기반 4륜 독립 조향<br/>
-    전방향 이동 · 제자리 회전 · 커브 주행
-  </Card>
-  <Card title="완전한 오픈소스" icon="github">
-    9개 ROS 2 패키지<br/>
-    **Apache License 2.0** 공개
-  </Card>
-  <Card title="멀티 센서 퓨전" icon="magnifier">
-    **13개 센서** 통합<br/>
-    LiDAR + RGB-D + IMU + GNSS
-  </Card>
-  <Card title="전천후 실외 운행" icon="sun">
-    IPX4 · 90mm 단차 · -10~40°C<br/>
-    전조등 · 와이퍼 장착
-  </Card>
-</CardGrid>
-
----
-
-## 로봇 사양
-
-<Tabs>
-  <TabItem label="기본 사양">
-    | 항목 | 사양 |
-    | :--- | :--- |
-    | **드라이브** | 4WD 독립 조향 스워브 (AWD) |
-    | **사이즈** | L762 x W582 x H766 mm (깃발 포함 H1,373) |
-    | **무게** | 62.1 kg |
-    | **주행 속도** | 0.5 ~ 2.0 m/s |
-    | **등판 각도** | 15° |
-    | **방수 등급** | IPX4 |
-    | **사용 온도** | -10 ~ 40°C (Cold Start: 0 ~ 40°C) |
-    | **통신** | 5G (LTE-CA) |
-  </TabItem>
-  <TabItem label="적재 & 배터리">
-    | 항목 | 사양 |
-    | :--- | :--- |
-    | **적재 공간** | L410 x W410 x H320 mm (53.8L) |
-    | **적재 중량** | 권장 10 kg / 최대 20 kg |
-    | **단차 주파 (5 kg)** | 최대 90 mm |
-    | **단차 주파 (20 kg)** | 최대 50 mm |
-    | **배터리** | LFP / 1팩 / 65Ah / 25.6V |
-    | **충전 방식** | 무선 자율 충전 + 수동 충전기 |
-    | **카고 개폐** | 수동 개폐 (잠금/해제 전동) |
-  </TabItem>
-  <TabItem label="컴퓨팅">
-    | 항목 | 사양 |
-    | :--- | :--- |
-    | **모델** | NVIDIA Jetson AGX Orin 32GB |
-    | **CPU** | 8-core Arm Cortex-A78AE v8.2 |
-    | **GPU** | NVIDIA Ampere |
-    | **RAM** | 32GB LPDDR5 (256-bit, 204.8GB/s) |
-    | **Cache** | 2MB L2 + 4MB L3 |
-    | **OS** | Ubuntu 22.04 (5.15.136-tegra) |
-    | **ROS 2** | Humble Hawksbill |
-    | **DDS** | FastDDS |
-    | **JetPack** | 6.0 (L4T R36.3.0) |
-  </TabItem>
-</Tabs>
-
----
-
-## 센서 구성
-
-| 센서 | 모델 | 수량 | 연결 | 비고 |
-| :--- | :--- | :---: | :--- | :--- |
-| 3D LiDAR | Vanjee WLR-722 | 1 | Ethernet | 상단 마운트, 10° 틸트 |
-| 2D LiDAR | COIN D4 | 2 | USB Serial | 전방 + 후방 |
-| RGB-D Camera | Orbbec Gemini 336L | 1 | USB | 전방 중앙, 30° 하향 |
-| Mono Camera | Novitec V4L2 | 3 | V4L2 | 좌/전방/우, 등거리 렌즈 |
-| Rear Camera | Generic V4L2 | 1 | V4L2 | 후방, 15 FPS |
-| Cargo Camera | USB Camera | 1 | USB | 적재함 내부, 10 FPS |
-| IMU | 6축 (RCU U60) | 1 | DXL Serial | 200 Hz, 상보 필터 |
-| GNSS | u-blox | 1 | Serial | GPS 수신기 |
-| Ultrasonic | - | 2 | RCU | 근거리 장애물 감지 |
-| Barometer | RCU 내장 | 1 | RCU | 대기압 측정 |
-| Magnetometer | RCU U59 | 1 | RCU | 3축 자기장 |
 
 ---
 
@@ -101,41 +15,26 @@ import { Card, CardGrid, Tabs, TabItem, Steps, LinkCard } from '@astrojs/starlig
 
 기본 패키지에 포함된 구성품:
 
-<Steps>
+- **ANTBot 본체** `x1`
 
-1. **ANTBot 본체** `x1`
+  4WD 스워브 드라이브 로봇 플랫폼 (전체 센서 + 컴퓨팅 탑재)
 
-   4WD 스워브 드라이브 로봇 플랫폼 (전체 센서 + 컴퓨팅 탑재)
+  :::note[ANTBot 전체 사진]
+  이미지 준비 중
+  :::
 
-2. **수동 충전기** `x1`
+- **수동 충전기** `x1`
 
-   HMI 패널 충전 단자에 연결하여 충전
+  HMI 패널 충전 단자에 연결하여 충전
 
-3. **무선 충전 도킹 스테이션** `옵션`
+  :::note[수동 충전기 사진]
+  이미지 준비 중
+  :::
 
-   별도 구매, 자동 도킹 및 무선 충전
+- **무선 충전 도킹 스테이션** `옵션`
 
-</Steps>
+  별도 구매, 자동 도킹 및 무선 충전
 
----
-
-## 소프트웨어 스택
-
-ANTBot의 전체 소프트웨어는 **9개의 모듈형 ROS 2 패키지**로 구성됩니다:
-
-| 패키지 | 언어 | 역할 |
-| :--- | :---: | :--- |
-| `antbot` | - | 메타 패키지 |
-| `antbot_bringup` | Python | 전체 시스템 launch 파일 |
-| `antbot_description` | Xacro | URDF/Xacro 로봇 모델 |
-| `antbot_swerve_controller` | C++17 | 스워브 드라이브 컨트롤러 (IK, 오도메트리) |
-| `antbot_hw_interface` | C++17 | ANT-RCU ros2_control 플러그인 |
-| `antbot_libs` | C++17 | Dynamixel Protocol 2.0 통신 |
-| `antbot_camera` | C++17 | 멀티 카메라 드라이버 |
-| `antbot_imu` | C++17 | IMU 드라이버 (상보 필터) |
-| `antbot_teleop` | Python | 키보드/조이스틱 원격 조종 |
-
-<CardGrid>
-  <LinkCard title="패키지 상세" description="9개 패키지 기능, 파라미터, 토픽 상세" href="/antbot_wiki/software/packages/" />
-  <LinkCard title="시스템 아키텍처" description="블록 다이어그램, 데이터 흐름, 통신 구조" href="/antbot_wiki/software/architecture/" />
-</CardGrid>
+  :::note[충전 스테이션 사진]
+  이미지 준비 중
+  :::
