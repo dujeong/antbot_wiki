@@ -1,6 +1,6 @@
 ---
 title: 4.4 배터리 충전
-description: ANTBot 배터리 충전
+description: AntBot 배터리 충전
 sidebar:
   order: 4
 ---

@@ -1,6 +1,6 @@
 ---
 title: Hardware
-description: ANTBot exterior, HMI, specifications, sensor coordinates, on-board computer
+description: AntBot exterior, HMI, specifications, sensor coordinates, on-board computer
 sidebar:
   order: 2
 ---

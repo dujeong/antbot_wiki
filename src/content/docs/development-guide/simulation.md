@@ -1,13 +1,13 @@
 ---
 title: 5.3 시뮬레이션 환경 구축
-description: ANTBot 시뮬레이션 환경 (URDF 시각화)
+description: AntBot 시뮬레이션 환경 (URDF 시각화)
 sidebar:
   order: 3
 ---
 
 ## URDF 모델 시각화
 
-하드웨어 없이 ANTBot의 URDF 모델을 RViz에서 확인할 수 있습니다:
+하드웨어 없이 AntBot의 URDF 모델을 RViz에서 확인할 수 있습니다:
 
 ```
 ros2 launch antbot_description description.launch.py

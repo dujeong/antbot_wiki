@@ -1,6 +1,6 @@
 ---
 title: 라이선스 및 기술 지원
-description: ANTBot 소스코드 라이선스 및 기술 지원 안내
+description: AntBot 소스코드 라이선스 및 기술 지원 안내
 sidebar:
   order: 7
 ---
@@ -9,7 +9,7 @@ sidebar:
 
 ### 소스코드
 
-ANTBot에 기본 탑재된 소프트웨어는 **Apache License 2.0**으로 배포됩니다.
+AntBot에 기본 탑재된 소프트웨어는 **Apache License 2.0**으로 배포됩니다.
 
 - 상업적 이용 가능
 - 수정 및 재배포 가능

@@ -8,7 +8,7 @@ export default defineConfig({
 	base: '/antbot_wiki',
 	integrations: [
 		starlight({
-			title: 'ANTBot Wiki',
+			title: 'AntBot Wiki',
 			favicon: '/favicon.png',
 			defaultLocale: 'root',
 			locales: {

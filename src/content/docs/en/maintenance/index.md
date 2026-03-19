@@ -1,6 +1,6 @@
 ---
 title: Maintenance & Troubleshooting
-description: ANTBot firmware diagnostics, updates, error codes, maintenance
+description: AntBot firmware diagnostics, updates, error codes, maintenance
 sidebar:
   order: 6
 ---

@@ -1,11 +1,11 @@
 ---
 title: 3.1 오픈소스 저장소 안내
-description: ANTBot GitHub 오픈소스 저장소
+description: AntBot GitHub 오픈소스 저장소
 sidebar:
   order: 1
 ---
 
-ANTBot의 구동을 위한 ROS 2 드라이버 및 제어 패키지는 **Apache License 2.0**으로 오픈소스 공개되어 있습니다.
+AntBot의 구동을 위한 ROS 2 드라이버 및 제어 패키지는 **Apache License 2.0**으로 오픈소스 공개되어 있습니다.
 
 ## GitHub 저장소
 

@@ -1,6 +1,6 @@
 ---
 title: Development Guide
-description: ANTBot control table, ROS topics/services, simulation
+description: AntBot control table, ROS topics/services, simulation
 sidebar:
   order: 5
 ---

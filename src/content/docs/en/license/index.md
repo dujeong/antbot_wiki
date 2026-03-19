@@ -1,6 +1,6 @@
 ---
 title: License & Support
-description: ANTBot source code license and technical support
+description: AntBot source code license and technical support
 sidebar:
   order: 7
 ---

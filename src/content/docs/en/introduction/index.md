@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: ANTBot product introduction and shipment contents
+description: AntBot product introduction and shipment contents
 sidebar:
   order: 1
 ---

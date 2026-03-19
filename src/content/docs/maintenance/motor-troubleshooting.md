@@ -5,8 +5,4 @@ sidebar:
   order: 4
 ---
 
-## 기술지원 문의
-
-모터에 이상이 발생한 경우 아래로 연락해 주세요.
-
-**ROBOTIS AI 기술지원팀:** [jdu@robotis.com](mailto:jdu@robotis.com)
+모터에 이상이 발생한 경우 [기술 지원](/antbot_wiki/license/) 페이지를 참조해 주세요.

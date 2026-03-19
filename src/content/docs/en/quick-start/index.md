@@ -1,6 +1,6 @@
 ---
 title: Quick Start
-description: ANTBot unboxing, power, network, charging, controller, SSD setup
+description: AntBot unboxing, power, network, charging, controller, SSD setup
 sidebar:
   order: 4
 ---

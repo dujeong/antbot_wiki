@@ -1,6 +1,6 @@
 ---
 title: Software
-description: ANTBot open-source repository, package configuration, environment setup
+description: AntBot open-source repository, package configuration, environment setup
 sidebar:
   order: 3
 ---
