@@ -19,7 +19,8 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid, LinkCard, Badge } from '@astrojs/starlight/components';
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import LatestRelease from '../../components/LatestRelease.astro';
 
 ---
 
@@ -58,4 +59,4 @@ import { Card, CardGrid, LinkCard, Badge } from '@astrojs/starlight/components';
 
 ## 릴리즈 노트
 
-<Badge text="V1.2" variant="success" /> 2026-03-16 — 위키 개선 (페이지 간소화, 콘텐츠 정리)
+<LatestRelease />
