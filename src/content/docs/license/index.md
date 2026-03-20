@@ -44,7 +44,7 @@ You may obtain a copy of the License at
 
 | 항목 | 내용 |
 | :--- | :--- |
-| Email | [jdu@robotis.com](mailto:jdu@robotis.com) |
+| Email | - |
 | Website | [www.robotis.com](https://www.robotis.com/) |
 | GitHub | [github.com/ROBOTIS-move/antbot](https://github.com/ROBOTIS-move/antbot) |
 
