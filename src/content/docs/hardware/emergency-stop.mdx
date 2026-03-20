@@ -19,11 +19,11 @@ import { Badge, Steps } from '@astrojs/starlight/components';
 
 <Steps>
 
-1. **모든 구동 모터가 즉시 정지**합니다
+1. **모든 구동 모터가 즉시 정지**합니다.
 
-2. **토크가 유지**되어 로봇이 경사면에서 미끄러지지 않습니다
+2. **토크가 유지**되어 로봇이 경사면에서 미끄러지지 않습니다.
 
-3. RCU 보드의 `Estop_State`가 <Badge text="ON" variant="danger" />으로 변경됩니다
+3. RCU 보드의 `Estop_State`가 <Badge text="ON" variant="danger" />으로 변경됩니다.
 
 </Steps>
 
@@ -36,4 +36,5 @@ import { Badge, Steps } from '@astrojs/starlight/components';
 :::caution
 비상정지 해제 후에도 모터가 즉시 동작하지 않습니다.
 모터 상태가 `IDLE` → `READY_ENTER` → `READY` 순서로 전환된 후에야 주행이 가능합니다.
+
 :::

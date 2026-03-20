@@ -15,7 +15,7 @@ AntBot의 구동을 위한 ROS 2 드라이버 및 제어 패키지는 **Apache L
 
 ## 저장소 구성
 
-```
+```bash
 antbot/
 |-- antbot/                        # 메타 패키지
 |-- antbot_bringup/                # Launch 파일 + 설정
@@ -32,16 +32,3 @@ antbot/
 |-- setting.sh                     # 의존성 설치 스크립트
 +-- additional_repos.repos         # 외부 저장소 목록 (vcs import용)
 ```
-
-## 빠른 시작
-
-```
-mkdir -p ~/antbot_ws/src && cd ~/antbot_ws/src
-git clone https://github.com/ROBOTIS-move/antbot.git
-cd antbot && bash setting.sh
-cd ~/antbot_ws && colcon build --symlink-install
-source install/setup.bash
-ros2 launch antbot_bringup bringup.launch.py
-```
-
-자세한 설치 과정은 [소프트웨어 환경 구축](/antbot_wiki/software/environment-setup/) 페이지를 참고하세요.

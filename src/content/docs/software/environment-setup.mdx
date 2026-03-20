@@ -25,7 +25,7 @@ ROS 2 Humble 설치가 필요한 경우, [공식 설치 가이드](https://docs.
 
 ### 1단계: 워크스페이스 생성 및 저장소 클론
 
-```
+```bash
 mkdir -p ~/antbot_ws/src && cd ~/antbot_ws/src
 git clone https://github.com/ROBOTIS-move/antbot.git
 ```
@@ -33,84 +33,52 @@ git clone https://github.com/ROBOTIS-move/antbot.git
 ### 2단계: 의존성 설치
 
 `setting.sh` 스크립트가 다음 작업을 자동으로 수행합니다:
-- 시스템 패키지 설치 (`netplan.io`, `minicom` 등)
+- 시스템 패키지 설치 (`netplan.io` 등)
 - 외부 ROS 2 패키지 클론 (vcs import)
 - `rosdep`을 통한 ROS 의존성 설치
 
-```
+```bash
 cd ~/antbot_ws/src/antbot
 bash setting.sh
 ```
 
 ### 3단계: 워크스페이스 빌드
 
-```
+```bash
 cd ~/antbot_ws
 colcon build --symlink-install
 ```
 
 ### 4단계: 환경 소싱
 
-```
+```bash
 source ~/antbot_ws/install/setup.bash
 ```
 
 :::tip
 `~/.bashrc`에 다음 줄을 추가하면 새 터미널마다 자동으로 소싱됩니다:
 
-```
+```bash
 echo 'source ~/antbot_ws/install/setup.bash' >> ~/.bashrc
 ```
 :::
-
-## 외부 의존 패키지
-
-`setting.sh`가 `additional_repos.repos` 파일을 기반으로 다음 패키지를 자동 설치합니다:
-
-| 패키지 | 출처 | 브랜치 | 용도 |
-| :--- | :--- | :--- | :--- |
-| `ublox` | KumarRobotics | `ros2` | u-blox GNSS 드라이버 |
-| `DynamixelSDK` | ROBOTIS | `humble` | Dynamixel Protocol 2.0 통신 |
-| `coin_d4_driver` | ROBOTIS | `humble` | COIN D4 2D LiDAR 드라이버 |
-| `OrbbecSDK_ROS2` | Orbbec | `v2-main` | Gemini 336L RGB-D 카메라 |
-
-## 빌드 확인
-
-빌드가 정상적으로 완료되었는지 확인합니다:
-
-```
-# 패키지 목록 확인
-ros2 pkg list | grep antbot
-
-# 예상 출력:
-# antbot
-# antbot_bringup
-# antbot_camera
-# antbot_description
-# antbot_hw_interface
-# antbot_imu
-# antbot_interfaces
-# antbot_libs
-# antbot_swerve_controller
-# antbot_teleop
-```
 
 ## 실행
 
 전체 시스템을 한 번에 실행하려면:
 
-```
+```bash
 ros2 launch antbot_bringup bringup.launch.py
 ```
 
 하드웨어 없이 URDF 모델만 확인하려면:
 
-```
+```bash
 ros2 launch antbot_description description.launch.py
 ```
 
-별도 PC에서 RViz로 센서를 모니터링하려면:
+(전체 시스템이 켜져있는 상태에서) RViz로 센서를 모니터링하려면:
 
-```
+```bash
 ros2 launch antbot_bringup view.launch.py
 ```

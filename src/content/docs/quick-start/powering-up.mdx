@@ -1,8 +1,8 @@
 ---
-title: 4.2 전원 켜기
+title: 4.1 전원 켜기
 description: AntBot 전원 켜기 및 부팅 확인
 sidebar:
-  order: 2
+  order: 1
 ---
 
 import { Steps } from '@astrojs/starlight/components';
@@ -11,11 +11,9 @@ import { Steps } from '@astrojs/starlight/components';
 
 <Steps>
 
-1. **비상정지 버튼**이 해제 상태(팝업)인지 확인합니다
+1. AntBot 좌측 하단에 있는 **전원 버튼**을 **부저음이 들릴 때까지** 누릅니다. (약 1~2초)
 
-2. **전원 버튼**을 **beep음이 들릴 때까지** 누릅니다 (약 1~2초)
-
-3. 플래그 LED가 점등되면서 **부팅이 시작**됩니다
+2. LED가 점등되면서 **부팅이 시작**됩니다.
 
 </Steps>
 
@@ -23,9 +21,10 @@ import { Steps } from '@astrojs/starlight/components';
 
 ## 전원 끄기
 
-전원 버튼을 약 **3초간 길게** 누르면 안전하게 종료됩니다.
+<Steps>
 
-:::danger
-**전원을 강제로 차단하지 마세요.** 파일 시스템 손상이 발생할 수 있습니다.
-반드시 전원 버튼 또는 `sudo shutdown now` 명령을 통해 종료해 주세요.
-:::
+1. AntBot 좌측 하단에 있는 **전원 버튼**을 **부저음이 들릴 때까지** 누릅니다. (약 1~2초)
+
+2. LED가 소등되면서 **로봇 전원이 꺼지게** 됩니다.
+
+</Steps>

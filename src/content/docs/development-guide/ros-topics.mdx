@@ -1,136 +1,54 @@
 ---
 title: 5.2 주요 ROS 토픽/서비스
-description: AntBot 주요 ROS 토픽, 서비스, 인터페이스 전체 명세
+description: AntBot 주요 ROS 토픽, 서비스, 인터페이스 명세
 sidebar:
   order: 2
 ---
-
-import { Tabs, TabItem, Badge } from '@astrojs/starlight/components';
 
 AntBot에서 사용하는 전체 ROS 2 토픽 및 서비스 명세입니다.
 
 ---
 
-## Published 토픽
+## 토픽
 
-<Tabs>
-  <TabItem label="센서 (IMU / LiDAR)">
-    **IMU** <Badge text="200 Hz" variant="success" />
+### Published
 
-    | 토픽 | 타입 | 퍼블리셔 | 설명 |
-    | :--- | :--- | :--- | :--- |
-    | `/imu_node/imu/accel_gyro` | `sensor_msgs/Imu` | antbot_imu | 쿼터니언 + 각속도 + 선가속도 |
+| 토픽 | 타입 | 설명 |
+| :--- | :--- | :--- |
+| `/imu_node/imu/accel_gyro` | `sensor_msgs/Imu` | 쿼터니언 + 각속도 + 선가속도 |
+| `/sensor/lidar_3d/point_cloud` | `sensor_msgs/PointCloud2` | 3D 포인트 클라우드 |
+| `/sensor/lidar_2d_front/scan` | `sensor_msgs/LaserScan` | 전방 2D 레이저 스캔 |
+| `/sensor/lidar_2d_back/scan` | `sensor_msgs/LaserScan` | 후방 2D 레이저 스캔 |
+| `/sensor/camera/v4l2/left/image_raw` | `sensor_msgs/Image` | 좌측 모노 카메라 |
+| `/sensor/camera/v4l2/front/image_raw` | `sensor_msgs/Image` | 전방 모노 카메라 |
+| `/sensor/camera/v4l2/right/image_raw` | `sensor_msgs/Image` | 우측 모노 카메라 |
+| `/sensor/camera/v4l2/rear/image_raw` | `sensor_msgs/Image` | 후방 카메라 |
+| `/sensor/camera/usb/cargo/image_raw` | `sensor_msgs/Image` | 카고 카메라 |
+| `/sensor/camera/*/camera_info` | `sensor_msgs/CameraInfo` | 각 카메라 캘리브레이션 |
+| `/battery` | `sensor_msgs/BatteryState` | 전압, 전류, SoC, 온도 |
+| `/sensor/ultrasound` | `std_msgs/Float64MultiArray` | 초음파 센서 거리 (cm) |
+| `/odom` | `nav_msgs/Odometry` | 오도메트리 (위치, 속도) |
+| `/tf` | `tf2_msgs/TFMessage` | odom → base_link 변환 |
+| `/cargo/status` | `antbot_interfaces/CargoStatus` | 카고 도어/잠금 상태 |
 
-    **LiDAR**
+:::note
+RGB-D 카메라는 Orbbec SDK를 통해 별도 토픽으로 퍼블리시됩니다.
+:::
 
-    | 토픽 | 타입 | 센서 | 설명 |
-    | :--- | :--- | :--- | :--- |
-    | `/sensor/lidar_3d/point_cloud` | `sensor_msgs/PointCloud2` | Vanjee WLR-722 | 3D 포인트 클라우드 |
-    | `/sensor/lidar_2d_front/scan` | `sensor_msgs/LaserScan` | COIN D4 | 전방 2D 레이저 스캔 |
-    | `/sensor/lidar_2d_back/scan` | `sensor_msgs/LaserScan` | COIN D4 | 후방 2D 레이저 스캔 |
-  </TabItem>
-  <TabItem label="카메라">
-    | 토픽 | 타입 | 설명 |
-    | :--- | :--- | :--- |
-    | `/sensor/camera/v4l2/left/image_raw` | `sensor_msgs/Image` | 좌측 모노 카메라 |
-    | `/sensor/camera/v4l2/front/image_raw` | `sensor_msgs/Image` | 전방 모노 카메라 |
-    | `/sensor/camera/v4l2/right/image_raw` | `sensor_msgs/Image` | 우측 모노 카메라 |
-    | `/sensor/camera/v4l2/rear/image_raw` | `sensor_msgs/Image` | 후방 카메라 |
-    | `/sensor/camera/usb/cargo/image_raw` | `sensor_msgs/Image` | 적재함 카메라 |
-    | `/sensor/camera/*/camera_info` | `sensor_msgs/CameraInfo` | 각 카메라 캘리브레이션 |
+### Subscribed
 
-    :::note
-    Gemini 336L RGB-D 카메라는 Orbbec SDK를 통해 별도 토픽으로 퍼블리시됩니다 (color + depth + point cloud).
-    :::
-  </TabItem>
-  <TabItem label="배터리 & 초음파">
-    | 토픽 | 타입 | 퍼블리셔 | 설명 |
-    | :--- | :--- | :--- | :--- |
-    | `/battery` | `sensor_msgs/BatteryState` | hw_interface | 전압, 전류, SoC, 온도 |
-    | `/sensor/ultrasound` | `std_msgs/Float64MultiArray` | hw_interface | 초음파 센서 거리 (cm) |
-  </TabItem>
-</Tabs>
-
----
-
-## Subscribed 토픽
-
-| 토픽 | 타입 | 구독자 | 설명 |
-| :--- | :--- | :--- | :--- |
-| `/cmd_vel` | `geometry_msgs/Twist` | swerve_controller | 속도 명령 (linear x/y + angular z) |
+| 토픽 | 타입 | 설명 |
+| :--- | :--- | :--- |
+| `/cmd_vel` | `geometry_msgs/Twist` | 속도 명령 (linear x/y + angular z) |
 
 ---
 
 ## 서비스
 
-<Tabs>
-  <TabItem label="적재함 제어">
-    **`cargo/command`** — `antbot_interfaces/CargoCommand`
-
-    | 필드 | 타입 | 값 | 설명 |
-    | :--- | :--- | :--- | :--- |
-    | Request: `operation` | uint8 | 0 = LOCK | 적재함 잠금 |
-    | | | 1 = UNLOCK | 적재함 해제 |
-    | Response: `success` | bool | - | 성공 여부 |
-    | Response: `message` | string | - | 상태 메시지 |
-
-    ```
-    # 적재함 잠금
-    ros2 service call /cargo/command antbot_interfaces/srv/CargoCommand "{operation: 0}"
-
-    # 적재함 해제
-    ros2 service call /cargo/command antbot_interfaces/srv/CargoCommand "{operation: 1}"
-    ```
-  </TabItem>
-  <TabItem label="전조등">
-    **`headlight/operation`** — `std_srvs/SetBool`
-
-    | 동작 | 명령 |
-    | :--- | :--- |
-    | 전조등 켜기 | `data: true` |
-    | 전조등 끄기 | `data: false` |
-
-    ```
-    # 전조등 ON
-    ros2 service call /headlight/operation std_srvs/srv/SetBool "{data: true}"
-
-    # 전조등 OFF
-    ros2 service call /headlight/operation std_srvs/srv/SetBool "{data: false}"
-    ```
-  </TabItem>
-  <TabItem label="와이퍼">
-    **`wiper/operation`** — `antbot_interfaces/WiperOperation`
-
-    | 필드 | 타입 | 값 | 설명 |
-    | :--- | :--- | :--- | :--- |
-    | Request: `mode` | uint8 | 0 = OFF | 와이퍼 정지 |
-    | | | 1 = ONCE | 1회 작동 |
-    | | | 2 = REPEAT | 반복 (주기: cycle_time) |
-    | Request: `cycle_time` | float32 | 기본 1.0 | 반복 주기 (초) |
-
-    ```
-    # 와이퍼 1회 작동
-    ros2 service call /wiper/operation antbot_interfaces/srv/WiperOperation "{mode: 1}"
-
-    # 와이퍼 2초 간격 반복
-    ros2 service call /wiper/operation antbot_interfaces/srv/WiperOperation "{mode: 2, cycle_time: 2.0}"
-    ```
-  </TabItem>
-  <TabItem label="컨트롤 테이블">
-    **`DirectRead`** / **`DirectWrite`** 서비스를 통해 RCU 컨트롤 테이블 아이템에 직접 접근할 수 있습니다.
-
-    ```
-    # 배터리 잔량 읽기
-    ros2 service call /direct_read antbot_interfaces/srv/DirectRead \
-      "{item_name: 'Battery_Percentage'}"
-
-    # LED 모드 설정
-    ros2 service call /direct_write antbot_interfaces/srv/DirectWrite \
-      "{item_name: 'Led_Flag_Mode', data: 2}"
-    ```
-
-    :::tip
-    컨트롤 테이블 전체 아이템 목록은 [5.1 컨트롤 테이블](/antbot_wiki/development-guide/control-table/) 페이지를 참조하세요.
-    :::
-  </TabItem>
-</Tabs>
+| 서비스 | 타입 | 설명 |
+| :--- | :--- | :--- |
+| `/cargo/command` | `antbot_interfaces/CargoCommand` | 카고 잠금/해제 |
+| `/headlight/operation` | `std_srvs/SetBool` | 전조등 ON/OFF |
+| `/wiper/operation` | `antbot_interfaces/WiperOperation` | 와이퍼 제어 |
+| `/hw/direct_read` | `antbot_interfaces/DirectRead` | 컨트롤 테이블 읽기 |
+| `/hw/direct_write` | `antbot_interfaces/DirectWrite` | 컨트롤 테이블 쓰기 |
