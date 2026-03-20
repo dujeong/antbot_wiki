@@ -11,12 +11,10 @@ sidebar:
 
 ## 수동 충전
 
-:::caution[📷 IMG-007 — 수동 충전기 연결 사진]
-이미지 준비 중
-:::
+![수동 충전기 연결](../../../assets/images/antbot_manual_charging.jpg)
 
 ## 무선 충전 스테이션
 
-:::caution[📷 IMG-008 — 충전 스테이션 도킹 사진]
+:::caution[📷 충전 스테이션 도킹 사진]
 이미지 준비 중
 :::

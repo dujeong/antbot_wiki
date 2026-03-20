@@ -5,6 +5,8 @@ sidebar:
   order: 4
 ---
 
+import { Steps } from '@astrojs/starlight/components';
+
 AntBot 소프트웨어를 빌드하고 실행하기 위한 환경 구축 가이드입니다.
 
 ## 사전 요구사항
@@ -23,45 +25,49 @@ ROS 2 Humble 설치가 필요한 경우, [공식 설치 가이드](https://docs.
 
 ## 설치 방법
 
-### 1단계: 워크스페이스 생성 및 저장소 클론
+<Steps>
 
-```bash
-mkdir -p ~/antbot_ws/src && cd ~/antbot_ws/src
-git clone https://github.com/ROBOTIS-move/antbot.git
-```
+1. 워크스페이스 생성 및 저장소 클론
 
-### 2단계: 의존성 설치
+   ```bash
+   mkdir -p ~/antbot_ws/src && cd ~/antbot_ws/src
+   git clone https://github.com/ROBOTIS-move/antbot.git
+   ```
 
-`setting.sh` 스크립트가 다음 작업을 자동으로 수행합니다:
-- 시스템 패키지 설치 (`netplan.io` 등)
-- 외부 ROS 2 패키지 클론 (vcs import)
-- `rosdep`을 통한 ROS 의존성 설치
+2. 의존성 설치
 
-```bash
-cd ~/antbot_ws/src/antbot
-bash setting.sh
-```
+   `setting.sh` 스크립트가 다음 작업을 자동으로 수행합니다.
+   - 시스템 패키지 설치 (`netplan.io` 등)
+   - 외부 ROS 2 패키지 클론 (vcs import)
+   - `rosdep`을 통한 ROS 의존성 설치
 
-### 3단계: 워크스페이스 빌드
+   ```bash
+   cd ~/antbot_ws/src/antbot
+   bash setting.sh
+   ```
 
-```bash
-cd ~/antbot_ws
-colcon build --symlink-install
-```
+3. 워크스페이스 빌드
 
-### 4단계: 환경 소싱
+   ```bash
+   cd ~/antbot_ws
+   colcon build --symlink-install
+   ```
 
-```bash
-source ~/antbot_ws/install/setup.bash
-```
+4. 환경 소싱
 
-:::tip
-`~/.bashrc`에 다음 줄을 추가하면 새 터미널마다 자동으로 소싱됩니다:
+   ```bash
+   source ~/antbot_ws/install/setup.bash
+   ```
 
-```bash
-echo 'source ~/antbot_ws/install/setup.bash' >> ~/.bashrc
-```
-:::
+   :::tip
+   `~/.bashrc`에 다음 줄을 추가하면 새 터미널마다 자동으로 소싱됩니다.
+
+   ```bash
+   echo 'source ~/antbot_ws/install/setup.bash' >> ~/.bashrc
+   ```
+   :::
+
+</Steps>
 
 ## 실행
 
