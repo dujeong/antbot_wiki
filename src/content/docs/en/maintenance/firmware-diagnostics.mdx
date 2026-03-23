@@ -53,11 +53,15 @@ You can also diagnose directly through the ROS 2 interface without stopping the 
 # Check battery level
 ros2 service call /hw/direct_read antbot_interfaces/srv/DirectRead \
   "{item_name: 'Battery_Percentage'}"
+```
 
+```bash
 # Check motor state
 ros2 service call /hw/direct_read antbot_interfaces/srv/DirectRead \
   "{item_name: 'Motor_State'}"
+```
 
+```bash
 # Check emergency stop state
 ros2 service call /hw/direct_read antbot_interfaces/srv/DirectRead \
   "{item_name: 'Estop_State'}"
