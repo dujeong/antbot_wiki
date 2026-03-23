@@ -26,7 +26,13 @@ When RCU board diagnostics are needed, use **Dynamixel Wizard 2.0**.
 2. Stop the AntBot service. (To prevent serial port conflicts)
 
    ```bash
-   sudo systemctl stop antbot
+   systemctl --user stop antbot.service
+   ```
+
+   Or you can use the alias:
+
+   ```bash
+   antbot_stop
    ```
 
 3. Launch Dynamixel Wizard 2.0.
