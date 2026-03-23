@@ -1,25 +1,22 @@
 ---
-title: 2.5 Sensor Specifications
-description: AntBot Sensor Configuration and Coordinate Reference — 6DoF Position Based on base_link Origin
+title: 2.5 Key Sensor Specifications
+description: AntBot Key Sensor Configuration and Coordinate Reference — 6DoF Position Based on base_link Origin
 sidebar:
   order: 5
 ---
 
-List of sensors installed on AntBot and their coordinates relative to `base_link`.
+List of key sensors installed on AntBot and their coordinates relative to `base_link`.
 
-## Sensor Configuration
+## Key Sensor Configuration
 
 | Sensor | Qty | Connection | Notes |
 | :--- | :---: | :--- | :--- |
 | 3D LiDAR | 1 | Ethernet | |
 | 2D LiDAR | 2 | USB | Front + Rear obstacle detection |
 | RGB-D Camera | 1 | USB | Color + Depth |
-| Mono Camera | 3 | V4L2 | |
-| Rear Camera | 1 | V4L2 | |
-| Cargo Interior Camera | 1 | USB | Cargo status monitoring |
+| Mono Camera | 4 | V4L2 | Front 3 + Rear 1 |
 | IMU | 1 | USB | |
 | GNSS | 1 | USB | GPS receiver |
-| Ultrasonic | 2 | USB connection to RCU board | Close-range obstacle detection |
 
 ---
 
@@ -53,7 +50,6 @@ List of sensors installed on AntBot and their coordinates relative to `base_link
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
 | IMU | 240.000 | 6.75 | 390.200 | 0 | 0 | 180 |
 | GNSS | 202.600 | -128.000 | 660.000 | 0 | 0 | 180 |
-| Magnetometer | 240.000 | -4.25 | 390.200 | 0 | 0 | 0 |
 
 :::note
 To check these coordinates in the URDF, refer to [`antbot_description/urdf/antbot.xacro`](https://github.com/ROBOTIS-move/antbot/blob/main/antbot_description/urdf/antbot.xacro).

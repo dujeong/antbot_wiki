@@ -1,25 +1,22 @@
 ---
-title: 2.5 센서 사양
-description: AntBot 센서 구성 및 좌표 기준 — base_link 원점 기준 6DoF 위치
+title: 2.5 주요 센서 사양
+description: AntBot 주요 센서 구성 및 좌표 기준 — base_link 원점 기준 6DoF 위치
 sidebar:
   order: 5
 ---
 
-AntBot에 탑재된 센서 목록과 `base_link` 기준 좌표입니다.
+AntBot에 탑재된 주요 센서 목록과 `base_link` 기준 좌표입니다.
 
-## 센서 구성
+## 주요 센서 구성
 
 | 센서 | 수량 | 연결 | 비고 |
 | :--- | :---: | :--- | :--- |
 | 3D LiDAR | 1 | Ethernet | |
 | 2D LiDAR | 2 | USB | 전방 + 후방 장애물 감지 |
 | RGB-D 카메라 | 1 | USB | Color + Depth |
-| 모노 카메라 | 3 | V4L2 | |
-| 후방 카메라 | 1 | V4L2 | |
-| 카고 내부 카메라 | 1 | USB | 적재 상태 모니터링 |
+| 모노 카메라 | 4 | V4L2 | 전방 3 + 후방 1 |
 | IMU | 1 | USB | |
 | GNSS | 1 | USB | GPS 수신기 |
-| 초음파 | 2 | RCU 보드와 USB 연결 | 근접 장애물 감지 |
 
 ---
 
@@ -53,7 +50,6 @@ AntBot에 탑재된 센서 목록과 `base_link` 기준 좌표입니다.
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: |
 | IMU | 240.000 | 6.75 | 390.200 | 0 | 0 | 180 |
 | GNSS | 202.600 | -128.000 | 660.000 | 0 | 0 | 180 |
-| 지자기 센서 | 240.000 | -4.25 | 390.200 | 0 | 0 | 0 |
 
 :::note
 URDF에서 이 좌표를 확인하려면 [`antbot_description/urdf/antbot.xacro`](https://github.com/ROBOTIS-move/antbot/blob/main/antbot_description/urdf/antbot.xacro)를 참조하세요.
